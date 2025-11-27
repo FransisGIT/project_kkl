@@ -24,17 +24,30 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'name' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required|min:4',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard.index')->with('success', 'Login berhasil!');
+            $user = Auth::user();
+            switch ($user->id_role) {
+                case 1: // Admin
+                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Admin!');
+                case 2: // Dosen
+                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Dosen!');
+                case 3: // Mahasiswa
+                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Mahasiswa!');
+                default:
+                    Auth::logout();
+                    return back()->withErrors([
+                        'name' => 'Role tidak valid.',
+                    ]);
+            }
         }
 
         return back()->withErrors([
             'name' => 'Username atau password salah.',
-        ])->onlyInput('email');
+        ])->onlyInput(['name', 'password']);
     }
 
     /**
@@ -46,33 +59,5 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/')->with('success', 'Logout berhasil!');
-    }
-
-    /**
-     * Register form
-     */
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
-
-    /**
-     * Handle registration
-     */
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        return redirect()->route('dashboard.index')->with('success', 'Registrasi berhasil!');
     }
 }

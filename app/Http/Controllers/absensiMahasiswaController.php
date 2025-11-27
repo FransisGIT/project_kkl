@@ -9,7 +9,6 @@ class absensiMahasiswaController extends Controller
 {
     public function index()
     {
-        $dataAbsensi = absensi_mahasiswa::all();
-        return view('dashboard.index', compact('dataAbsensi'));
+        return view('dashboard.index');
     }
 }

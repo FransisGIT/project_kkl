@@ -27,7 +27,13 @@
                 <li>
                     <a href="" class="tp-link">
                         <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
-                        <span>Dashboard</span>
+                        <span>KRS</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="" class="tp-link">
+                        <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
+                        <span>Dispensasi</span>
                     </a>
                 </li>
             </ul>

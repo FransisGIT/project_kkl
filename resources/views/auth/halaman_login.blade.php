@@ -56,7 +56,7 @@
                                             </div>
 
                                             <div class="pt-0">
-                                                <form method="POST" action="/login" class="my-4">
+                                                <form method="POST" action="{{ route('fungsi-login') }}" class="my-4">
                                                     @csrf
                                                     <div class="form-group mb-3">
                                                         <label for="login" class="form-label">

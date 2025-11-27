@@ -46,19 +46,14 @@
                     <div class="dropdown-menu dropdown-menu-end profile-dropdown">
                         <!-- item-->
                         <div class="dropdown-header noti-title">
-                            <h6 class="text-overflow m-0">
+                            <h5 class="text-overflow m-0">
                                 Informasi Pengguna
-                            </h6>
+                            </h5>
+                            <div class="mt-3">
+                            <h6 class="fs-6"><strong>Nama:</strong> {{ Auth::user()->name }}</h6>
+                            <h6 class="fs-6"><strong>Peran:</strong> {{ Auth::user()->role->name}}</h6>
+                            </div>
                         </div>
-
-                        <div class="dropdown-divider"></div>
-
-                        <!-- User Info -->
-                        {{-- <div class="dropdown-item">
-                            <p class="mb-1"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
-                            <p class="mb-0"><strong>Email:</strong> {{ Auth::user()->email }}</p>
-                        </div> --}}
-
                         <div class="dropdown-divider"></div>
 
                         <!-- item-->

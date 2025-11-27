@@ -12,6 +12,21 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The primary key associated with the table.
+     */
+    protected $primaryKey = 'id_user';
+
+    /**
+     * The data type of the primary key.
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -20,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'id_role',
     ];
 
     /**
@@ -38,7 +54,31 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        // 'password' => 'hashed',
+        // 'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the role that owns the user.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role', 'id_role');
+    }
+
+    /**
+     * Get mata kuliah for the user (many-to-many through rencana_studi).
+     */
+    public function mataKuliah()
+    {
+        return $this->belongsToMany(MataKuliah::class, 'rencana_studi', 'id_user', 'id_matakuliah')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get rencana studi for the user.
+     */
+    public function rencanaStudi()
+    {
+        return $this->hasMany(RencanaStudi::class, 'id_user', 'id_user');
+    }
 }
