@@ -1,10 +1,10 @@
-@extends('app', ['title' => 'Dashboard'])
+@extends('app', ['title' => 'Krs'])
 
 @section('content')
     {{-- <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
         <div class="flex-grow-1">
             <h4 class="fs-18 fw-semibold m-0">
-                Dashboard
+                KRS
             </h4>
         </div>
     </div> --}}
@@ -12,13 +12,13 @@
     <div class="row">
         <div class="col-12">
             <div class="card card-body shadow-sm">
-                <h3 class="mb-4 fw-bold">Dashboard</h3>
+                <h3 class="mb-4 fw-bold">Rencana Studi</h3>
                 {{-- Pesan Sukses --}}
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <div class="row mb-4">
+                {{-- <div class="row mb-4">
                     <div class="col-md-4">
                         <div class="card text-center bg-primary text-white mb-3">
                             <div class="card-body">
@@ -35,9 +35,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                {{-- <div class="mb-2">
+                <div class="mb-2">
                     <b>KETERANGAN:</b>
                     <ul style="list-style-type:none;padding-left:0">
                         <li><span
@@ -47,10 +47,10 @@
                                 style="background:#d5f0fa;width:18px;height:18px;display:inline-block;margin-right:6px;border-radius:4px;"></span>
                             Mata Kuliah yang ditawarkan</li>
                     </ul>
-                </div> --}}
+                </div>
 
                 {{-- Form Filter/Search --}}
-                {{-- <form method="GET" class="row mb-3">
+                <form method="GET" class="row mb-3">
                     <div class="col-md-4 mb-2">
                         <input type="text" class="form-control" name="search" value="{{ request('search') }}"
                             placeholder="Cari nama mata kuliah ...">
@@ -67,10 +67,10 @@
                     <div class="col-md-2 mb-2">
                         <button class="btn btn-secondary" type="submit">Filter</button>
                     </div>
-                </form> --}}
+                </form>
 
                 {{-- Form Table MK --}}
-                {{-- <form action="{{ route('rencana-studi.store') }}" method="POST">
+                <form action="{{ route('rencana-studi.store') }}" method="POST">
                     @csrf
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle text-center">
@@ -121,7 +121,7 @@
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">Pengajuan KRS</button>
                     </div>
-                </form> --}}
+                </form>
             </div>
         </div>
     </div>

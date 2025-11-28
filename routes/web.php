@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\absensiMahasiswaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KrsController;
+use App\Http\Controllers\RencanaStudiController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +28,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // Dashboard Route
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [absensiMahasiswaController::class, 'index'])->name('dashboard.index')->middleware('auth');
+
+    Route::get('/krs', [RencanaStudiController::class, 'index'])->name('krs.index');
+
+    Route::post('/rencana-studi/simpan', [RencanaStudiController::class, 'store'])->name('rencana-studi.store');
+    // (opsional) jika ingin akses halaman KRS sebagai /rencana-studi
+    // Route::get('/dashboard', [\App\Http\Controllers\RencanaStudiController::class, 'index'])->name('dashboard.index');
 });

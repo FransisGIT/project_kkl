@@ -65,20 +65,26 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
     }
 
+// ...existing code...
+
     /**
-     * Get mata kuliah for the user (many-to-many through rencana_studi).
+     * Many-to-many: user <-> mata_kuliah melalui tabel rencana_studi
      */
     public function mataKuliah()
     {
-        return $this->belongsToMany(MataKuliah::class, 'rencana_studi', 'id_user', 'id_matakuliah')
-                    ->withTimestamps();
+        // asumsi kolom pivot: id_user, id_matakuliah
+        return $this->belongsToMany(\App\Models\MataKuliah::class, 'rencana_studi', 'id_user', 'id_matakuliah')
+            ->withTimestamps();
     }
 
     /**
-     * Get rencana studi for the user.
+     * One-to-many: user -> rencana_studi
      */
     public function rencanaStudi()
     {
-        return $this->hasMany(RencanaStudi::class, 'id_user', 'id_user');
+        // asumsikan primary key User = 'id'; ganti jika beda (mis. 'id_user')
+        return $this->hasMany(\App\Models\RencanaStudi::class, 'id_user', 'id_user');
     }
+
+    // ...existing code...
 }

@@ -13,6 +13,14 @@
                         <img src="" alt="" height="45">
                     </span>
                 </a>
+                <a href="" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="" alt="" height="45">
+                    </span>
+                </a>
                 <a href="" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="" alt="" height="22">
@@ -25,8 +33,15 @@
 
             <ul id="side-menu">
                 <li>
-                    <a href="" class="tp-link">
+                    <a href="{{ route('dashboard.index') }}"
+                        class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
                         <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
+                        <span class="mdi mdi-view-dashboard-outline"></span>
                         <span>KRS</span>
                     </a>
                 </li>
