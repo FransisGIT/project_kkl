@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class AuthController extends Controller
 {
@@ -14,6 +15,10 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard.index');
+        }
+
         return view('auth.halaman_login');
     }
 
