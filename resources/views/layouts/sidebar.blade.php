@@ -25,13 +25,13 @@
 
             <ul id="side-menu">
                 <li>
-                    <a href="" class="tp-link">
+                    <a href="{{ route('dashboard.index') }}" class="tp-link">
                         <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
                         <span>KRS</span>
                     </a>
                 </li>
                 <li>
-                    <a href="" class="tp-link">
+                    <a href="{{ route('dispensasi.index') }}" class="tp-link">
                         <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
                         <span>Dispensasi</span>
                     </a>
