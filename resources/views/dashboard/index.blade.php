@@ -1,5 +1,6 @@
 @extends('app', ['title' => 'Dashboard'])
 
+
 @section('content')
     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
         <div class="flex-grow-1">
@@ -10,7 +11,7 @@
     </div>
 
     <div class="row">
-            <div class="col-12">
+        <div class="col-12">
             <div class="card card-body shadow-sm">
                 {{-- <div class="row g-2">
                     <div class="col-12 col-md-auto d-flex flex-grow-1 align-items-center">
@@ -140,6 +141,7 @@
 @push('styles')
     <link href="{{ asset('assets/libs/jquery-confirm/jquery-confirm.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="{{ url('css/dashboard.css') }}">
 @endpush
 
 @push('scripts')

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth Routes
-Route::get('/', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('fungsi-login')->middleware('guest');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->middleware('guest');
