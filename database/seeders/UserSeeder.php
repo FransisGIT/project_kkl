@@ -39,5 +39,21 @@ class UserSeeder extends Seeder
             'id_role' => 3,
             'remember_token' => Str::random(10)
         ]);
+
+        User::create([
+            'id_user' => Str::uuid(),
+            'name' => 'keuangan',
+            'password' => Hash::make('keuangan'),
+            'id_role' => 4,
+            'remember_token' => Str::random(10)
+        ]);
+
+        User::create([
+            'id_user' => Str::uuid(),
+            'name' => 'warek2',
+            'password' => Hash::make('warek2'),
+            'id_role' => 5,
+            'remember_token' => Str::random(10)
+        ]);
     }
 }
