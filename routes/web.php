@@ -33,18 +33,14 @@ Route::middleware(['auth'])->group(function () {
     // KRS untuk Mahasiswa
     Route::get('/krs', [RencanaStudiController::class, 'index'])->name('krs.index');
     Route::post('/rencana-studi/simpan', [RencanaStudiController::class, 'store'])->name('rencana-studi.store');
-<<<<<<< HEAD
 
-    // Jadwal Kuliah untuk Mahasiswa
-    Route::get('/jadwal-kuliah', [\App\Http\Controllers\JadwalKuliahController::class, 'index'])->name('jadwal-kuliah.index');
+    // Jadwal Kuliah
+    Route::get('/jadwal-kuliah', [App\Http\Controllers\JadwalKuliahController::class, 'index'])->name('jadwal-kuliah.index');
 
     // Persetujuan KRS untuk Admin/Dosen
-    Route::get('/persetujuan-krs', [\App\Http\Controllers\PersetujuanKrsController::class, 'index'])->name('persetujuan-krs.index');
-    Route::post('/persetujuan-krs/{id}/approve', [\App\Http\Controllers\PersetujuanKrsController::class, 'approve'])->name('persetujuan-krs.approve');
-    Route::post('/persetujuan-krs/{id}/reject', [\App\Http\Controllers\PersetujuanKrsController::class, 'reject'])->name('persetujuan-krs.reject');
-=======
-    // (opsional) jika ingin akses halaman KRS sebagai /rencana-studi
-    // Route::get('/dashboard', [\App\Http\Controllers\RencanaStudiController::class, 'index'])->name('dashboard.index');
+    Route::get('/persetujuan-krs', [App\Http\Controllers\PersetujuanKrsController::class, 'index'])->name('persetujuan-krs.index');
+    Route::post('/persetujuan-krs/{id}/approve', [App\Http\Controllers\PersetujuanKrsController::class, 'approve'])->name('persetujuan-krs.approve');
+    Route::post('/persetujuan-krs/{id}/reject', [App\Http\Controllers\PersetujuanKrsController::class, 'reject'])->name('persetujuan-krs.reject');
 
     // Dispensasi Routes
     Route::get('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'index'])
@@ -55,5 +51,4 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'store'])
         ->name('dispensasi.store');
->>>>>>> 7cf422054cccd11441af387f6573a40d89ae7f21
 });

@@ -32,7 +32,6 @@
             </div>
 
             <ul id="side-menu">
-<<<<<<< HEAD
                 {{-- Menu untuk Mahasiswa (id_role = 3) --}}
                 @if(Auth::user()->id_role == 3)
                     <li>
@@ -54,12 +53,6 @@
                             <span>Jadwal Kuliah</span>
                         </a>
                     </li>
-                    {{-- <li>
-                        <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
-                            <span class="mdi mdi-file-edit-outline fs-18 me-1"></span>
-                            <span>Dispensasi</span>
-                        </a>
-                    </li> --}}
                 @endif
 
                 {{-- Menu untuk Admin/Dosen (id_role = 1 atau 2) --}}
@@ -72,27 +65,12 @@
                         </a>
                     </li>
                 @endif
-=======
-                <li>
-                    <a href="{{ route('dashboard.index') }}"
-                        class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
-                        <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
-                        <span class="mdi mdi-view-dashboard-outline"></span>
-                        <span>KRS</span>
-                    </a>
-                </li>
                 <li>
                     <a href="{{ route('dispensasi.index') }}" class="tp-link">
                         <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
                         <span>Dispensasi</span>
                     </a>
                 </li>
->>>>>>> 7cf422054cccd11441af387f6573a40d89ae7f21
             </ul>
 
         </div>
