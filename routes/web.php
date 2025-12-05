@@ -38,9 +38,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/jadwal-kuliah', [App\Http\Controllers\JadwalKuliahController::class, 'index'])->name('jadwal-kuliah.index');
 
     // Persetujuan KRS untuk Admin/Dosen
+<<<<<<< HEAD
     Route::get('/persetujuan-krs', [App\Http\Controllers\PersetujuanKrsController::class, 'index'])->name('persetujuan-krs.index');
     Route::post('/persetujuan-krs/{id}/approve', [App\Http\Controllers\PersetujuanKrsController::class, 'approve'])->name('persetujuan-krs.approve');
     Route::post('/persetujuan-krs/{id}/reject', [App\Http\Controllers\PersetujuanKrsController::class, 'reject'])->name('persetujuan-krs.reject');
+=======
+    Route::get('/persetujuan-krs', [\App\Http\Controllers\PersetujuanKrsController::class, 'index'])->name('persetujuan-krs.index');
+    Route::post('/persetujuan-krs/{id}/approve', [\App\Http\Controllers\PersetujuanKrsController::class, 'approve'])->name('persetujuan-krs.approve');
+    Route::post('/persetujuan-krs/{id}/reject', [\App\Http\Controllers\PersetujuanKrsController::class, 'reject'])->name('persetujuan-krs.reject');
+    // (opsional) jika ingin akses halaman KRS sebagai /rencana-studi
+    // Route::get('/dashboard', [\App\Http\Controllers\RencanaStudiController::class, 'index'])->name('dashboard.index');
+>>>>>>> 563b41dec9f4a08bb1dee66772c4087f9061d785
 
     // Dispensasi Routes
     Route::get('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'index'])

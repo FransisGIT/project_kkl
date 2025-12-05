@@ -14,7 +14,7 @@ class CreateDispensasisTable extends Migration
     public function up()
     {
         Schema::create('dispensasis', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id_user')->primary()->autoIncrement();
             $table->string('tahun_akademik');
             $table->integer('jumlah');
             $table->string('no_hp');

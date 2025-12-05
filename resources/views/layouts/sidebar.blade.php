@@ -55,7 +55,6 @@
                     </li>
                 @endif
 
-                {{-- Menu untuk Admin/Dosen (id_role = 1 atau 2) --}}
                 @if(in_array(Auth::user()->id_role, [1, 2]))
                     <li>
                         <a href="{{ route('persetujuan-krs.index') }}"
