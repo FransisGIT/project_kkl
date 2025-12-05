@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('rencana_studi', function (Blueprint $table) {
             $table->bigIncrements('id_rencana_studi');
             $table->uuid('id_user');
-            $table->uuid('id_matakuliah');
+            $table->json('id_mata_kuliah');
+            $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
+            $table->text('catatan')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
-            $table->foreign('id_matakuliah')->references('id_matakuliah')->on('mata_kuliah')->onDelete('cascade');
         });
     }
 

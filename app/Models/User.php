@@ -65,26 +65,32 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
     }
 
-// ...existing code...
-
-    /**
-     * Many-to-many: user <-> mata_kuliah melalui tabel rencana_studi
-     */
-    public function mataKuliah()
-    {
-        // asumsi kolom pivot: id_user, id_matakuliah
-        return $this->belongsToMany(\App\Models\MataKuliah::class, 'rencana_studi', 'id_user', 'id_matakuliah')
-            ->withTimestamps();
-    }
-
     /**
      * One-to-many: user -> rencana_studi
      */
     public function rencanaStudi()
     {
-        // asumsikan primary key User = 'id'; ganti jika beda (mis. 'id_user')
         return $this->hasMany(\App\Models\RencanaStudi::class, 'id_user', 'id_user');
     }
 
-    // ...existing code...
+    /**
+     * Get latest rencana studi
+     */
+    public function rencanaStudiAktif()
+    {
+        return $this->hasOne(\App\Models\RencanaStudi::class, 'id_user', 'id_user')
+            ->latest();
+    }
+
+    /**
+     * Get mata kuliah dari rencana studi aktif
+     */
+    public function getMataKuliahDiambilAttribute()
+    {
+        $rencanaAktif = $this->rencanaStudiAktif;
+        if (!$rencanaAktif || empty($rencanaAktif->id_mata_kuliah)) {
+            return [];
+        }
+        return $rencanaAktif->id_mata_kuliah;
+    }
 }

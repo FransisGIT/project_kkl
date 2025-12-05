@@ -37,11 +37,11 @@ class AuthController extends Controller
             $user = Auth::user();
             switch ($user->id_role) {
                 case 1: // Admin
-                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Admin!');
+                    return redirect()->route('persetujuan-krs.index')->with('success', 'Login berhasil sebagai Admin!');
                 case 2: // Dosen
-                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Dosen!');
+                    return redirect()->route('persetujuan-krs.index')->with('success', 'Login berhasil sebagai Dosen!');
                 case 3: // Mahasiswa
-                    return redirect()->route('dashboard.index')->with('success', 'Login berhasil sebagai Mahasiswa!');
+                    return redirect()->route('beranda.index')->with('success', 'Login berhasil sebagai Mahasiswa!');
                 default:
                     Auth::logout();
                     return back()->withErrors([
@@ -64,5 +64,30 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/')->with('success', 'Logout berhasil!');
+    }
+
+    /**
+     * Switch user role
+     */
+    public function switchRole(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id_role',
+        ]);
+
+        $user = Auth::user();
+        User::where('id_user', $user->id_user)->update(['id_role' => $request->role_id]);
+
+        // Redirect berdasarkan role baru
+        switch ($request->role_id) {
+            case 1: // Admin
+                return redirect()->route('persetujuan-krs.index')->with('success', 'Berhasil berganti ke Admin!');
+            case 2: // Dosen
+                return redirect()->route('persetujuan-krs.index')->with('success', 'Berhasil berganti ke Dosen!');
+            case 3: // Mahasiswa
+                return redirect()->route('beranda.index')->with('success', 'Berhasil berganti ke Mahasiswa!');
+            default:
+                return back()->with('error', 'Role tidak valid.');
+        }
     }
 }

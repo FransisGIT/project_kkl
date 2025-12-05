@@ -18,7 +18,16 @@ class RencanaStudi extends Model
 
     protected $fillable = [
         'id_user',
-        'id_matakuliah',
+        'id_mata_kuliah',
+        'status',
+        'catatan',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'id_mata_kuliah' => 'array',
     ];
 
     /**
@@ -30,10 +39,13 @@ class RencanaStudi extends Model
     }
 
     /**
-     * Get the mata kuliah for the rencana studi.
+     * Get mata kuliah collection from JSON IDs
      */
-    public function mataKuliah()
+    public function getMataKuliahAttribute()
     {
-        return $this->belongsTo(MataKuliah::class, 'id_matakuliah', 'id_matakuliah');
+        if (empty($this->id_mata_kuliah)) {
+            return collect([]);
+        }
+        return MataKuliah::whereIn('id_matakuliah', $this->id_mata_kuliah)->get();
     }
 }

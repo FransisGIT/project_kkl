@@ -32,25 +32,45 @@
             </div>
 
             <ul id="side-menu">
-                <li>
-                    <a href="{{ route('dashboard.index') }}"
-                        class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
-                        <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
-                        <span class="mdi mdi-view-dashboard-outline"></span>
-                        <span>KRS</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" class="tp-link">
-                        <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
-                        <span>Dispensasi</span>
-                    </a>
-                </li>
+                {{-- Menu untuk Mahasiswa (id_role = 3) --}}
+                @if(Auth::user()->id_role == 3)
+                    <li>
+                        <a href="{{ route('beranda.index') }}"
+                            class="{{ request()->routeIs('beranda.index') ? 'active' : '' }}">
+                            <span class="mdi mdi-view-dashboard-outline fs-18 me-1"></span>
+                            <span>Beranda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
+                            <span class="mdi mdi-file-document-outline fs-18 me-1"></span>
+                            <span>KRS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('jadwal-kuliah.index') }}" class="{{ request()->routeIs('jadwal-kuliah.index') ? 'active' : '' }}">
+                            <span class="mdi mdi-calendar-clock fs-18 me-1"></span>
+                            <span>Jadwal Kuliah</span>
+                        </a>
+                    </li>
+                    {{-- <li>
+                        <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
+                            <span class="mdi mdi-file-edit-outline fs-18 me-1"></span>
+                            <span>Dispensasi</span>
+                        </a>
+                    </li> --}}
+                @endif
+
+                {{-- Menu untuk Admin/Dosen (id_role = 1 atau 2) --}}
+                @if(in_array(Auth::user()->id_role, [1, 2]))
+                    <li>
+                        <a href="{{ route('persetujuan-krs.index') }}"
+                            class="{{ request()->routeIs('persetujuan-krs.*') ? 'active' : '' }}">
+                            <span class="mdi mdi-clipboard-check-outline fs-18 me-1"></span>
+                            <span>Persetujuan KRS</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
 
         </div>

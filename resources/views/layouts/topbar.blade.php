@@ -32,6 +32,36 @@
                     </button>
                 </li>
 
+                <!-- Switch Role Dropdown -->
+                <li class="dropdown notification-list topbar-dropdown me-2">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                        role="button" aria-haspopup="false" aria-expanded="false">
+                        <i data-feather="users" class="noti-icon"></i>
+                        <span class="d-none d-md-inline ms-1">{{ Auth::user()->role->name }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="dropdown-header">
+                            <h6 class="text-overflow m-0">Ganti Peran</h6>
+                        </div>
+                        <div class="dropdown-divider"></div>
+
+                        @foreach($roles as $role)
+                            <a href="#" class="dropdown-item {{ Auth::user()->id_role == $role->id_role ? 'active' : '' }}"
+                                onclick="event.preventDefault(); document.getElementById('switch-role-{{ $role->id_role }}').submit();">
+                                <i class="mdi mdi-account-circle me-1"></i>
+                                <span>{{ $role->name }}</span>
+                                @if(Auth::user()->id_role == $role->id_role)
+                                    <i class="mdi mdi-check float-end"></i>
+                                @endif
+                            </a>
+                            <form id="switch-role-{{ $role->id_role }}" action="{{ route('switch-role') }}" method="POST" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="role_id" value="{{ $role->id_role }}">
+                            </form>
+                        @endforeach
+                    </div>
+                </li>
+
                 <!-- User Dropdown -->
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#"
@@ -47,7 +77,7 @@
                         <!-- item-->
                         <div class="dropdown-header noti-title">
                             <h5 class="text-overflow m-0">
-                                Informasi Pengguna
+                                Informasi Akun
                             </h5>
                             <div class="mt-3">
                             <h6 class="fs-6"><strong>Nama:</strong> {{ Auth::user()->name }}</h6>
