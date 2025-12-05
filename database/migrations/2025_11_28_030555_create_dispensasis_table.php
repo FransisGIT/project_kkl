@@ -15,8 +15,12 @@ class CreateDispensasisTable extends Migration
     {
         Schema::create('dispensasis', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id');
-            $table->string('keterangan');
+            $table->string('tahun_akademik');
+            $table->integer('jumlah');
+            $table->string('no_hp');
+            $table->date('deadline');
+            $table->string('file_pdf')->nullable();
+            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
             $table->timestamps();
         });
     }

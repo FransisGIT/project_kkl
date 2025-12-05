@@ -34,4 +34,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/rencana-studi/simpan', [RencanaStudiController::class, 'store'])->name('rencana-studi.store');
     // (opsional) jika ingin akses halaman KRS sebagai /rencana-studi
     // Route::get('/dashboard', [\App\Http\Controllers\RencanaStudiController::class, 'index'])->name('dashboard.index');
+
+    // Dispensasi Routes
+    Route::get('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'index'])
+        ->name('dispensasi.index');
+
+    Route::get('/dispensasi/create', [\App\Http\Controllers\DispensasiController::class, 'create'])
+        ->name('dispensasi.create');
+
+    Route::post('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'store'])
+        ->name('dispensasi.store');
 });
