@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dispensasi;
+use App\Models\Role;
 
 class DispensasiController extends Controller
 {
     public function index()
     {
-        $data = Dispensasi::where('user_id', auth()->id())->get();
+        $data = Dispensasi::where('id_user', auth()->id())->get();
+        $roles = Role::all();
 
-        return view('dispensasi.index', compact('data'));
+        return view('dispensasi.index', compact('data', 'roles'));
     }
 
     public function create()
