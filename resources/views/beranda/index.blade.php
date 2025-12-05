@@ -1,4 +1,4 @@
-@extends('app', ['title' => 'Dashboard'])
+@extends('app', ['title' => 'Beranda'])
 
 
 @section('content')
@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card card-body shadow-sm">
-                <h3 class="mb-4 fw-bold">Dashboard</h3>
+                <h3 class="mb-4 fw-bold">Beranda</h3>
                 {{-- Pesan Sukses --}}
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
