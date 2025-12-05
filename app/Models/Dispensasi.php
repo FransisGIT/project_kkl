@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Dispensasi extends Model
 {
     protected $fillable = [
-        'id_user',
+        'id',
         'tahun_akademik',
         'jumlah_pengajuan',
         'no_hp',

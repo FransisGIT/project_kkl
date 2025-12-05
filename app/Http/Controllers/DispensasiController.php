@@ -10,17 +10,10 @@ class DispensasiController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
-        $data = Dispensasi::where('user_id', auth()->id())->get();
-        $roles = Role::all();
-
-        return view('dispensasi.index', compact('data','roles'));
-=======
-        $data = Dispensasi::where('id_user', auth()->id())->get();
+        $data = Dispensasi::where('id', auth()->id())->get();
         $roles = Role::all();
 
         return view('dispensasi.index', compact('data', 'roles'));
->>>>>>> 563b41dec9f4a08bb1dee66772c4087f9061d785
     }
 
     public function create()
