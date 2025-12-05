@@ -44,7 +44,7 @@
                         @endphp
 
                         @foreach($mataKuliahGrouped as $hari => $mkList)
-                            <div class="mb-4">
+                            <div class="mb-4 py-5">
                                 <h5 class="fw-bold mb-3">
                                     <i class="mdi mdi-calendar me-2"></i>{{ $hari ?? 'Hari Tidak Ditentukan' }}
                                 </h5>
@@ -81,20 +81,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <hr class="my-2">
-
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <small class="text-muted">
-                                                            <i class="mdi mdi-account-multiple me-1"></i>
-                                                            {{ $mk->peserta }}/{{ $mk->kapasitas }} Mahasiswa
-                                                        </small>
-                                                        @php
-                                                            $percentage = $mk->kapasitas > 0 ? ($mk->peserta / $mk->kapasitas) * 100 : 0;
-                                                        @endphp
-                                                        <small class="text-{{ $percentage >= 90 ? 'danger' : ($percentage >= 70 ? 'warning' : 'success') }}">
-                                                            {{ number_format($percentage, 0) }}%
-                                                        </small>
-                                                    </div>
+                                                    {{-- <hr class="my-2"> --}}
                                                 </div>
                                             </div>
                                         </div>
