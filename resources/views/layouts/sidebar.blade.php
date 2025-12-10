@@ -7,10 +7,10 @@
             <div class="logo-box">
                 <a href="" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="22">
+                        <img src="{{ asset('images/logo-mandala-bg.png') }}" alt="Logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="45">
+                        <img src="{{ asset('assets/images/logo-mandala-bg.png') }}" alt="Logo" height="45">
                     </span>
                 </a>
                 {{-- <a href="" class="logo logo-light">
@@ -23,10 +23,10 @@
                 </a> --}}
                 <a href="" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="22">
+                        <img src="{{ asset('images/logo-mandala-bg.png') }}" alt="Logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="45">
+                        <img src="{{ asset('assets/images/logo-mandala-bg.png') }}" alt="Logo" height="45">
                     </span>
                 </a>
             </div>

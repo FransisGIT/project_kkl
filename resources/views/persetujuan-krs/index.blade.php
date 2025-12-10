@@ -32,7 +32,7 @@
                                     <td>{{ $rs->jumlahMk }} MK</td>
                                     <td>{{ $rs->totalSks }} SKS</td>
                                     <td>
-                                        @if($rs->status === 'menunggu')
+                                        @if ($rs->status === 'menunggu')
                                             <span class="badge bg-warning">Menunggu</span>
                                         @elseif($rs->status === 'disetujui')
                                             <span class="badge bg-success">Disetujui</span>
@@ -41,15 +41,18 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($rs->status === 'menunggu')
-                                            <form action="{{ route('persetujuan-krs.approve', $rs->id_rencana_studi) }}" method="POST" class="d-inline">
+                                        @if ($rs->status === 'menunggu')
+                                            <form action="{{ route('persetujuan-krs.approve', $rs->id_rencana_studi) }}"
+                                                method="POST" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Setujui KRS ini?')">
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                    onclick="return confirm('Setujui KRS ini?')">
                                                     <i class="mdi mdi-check"></i> Setujui
                                                 </button>
                                             </form>
 
-                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $rs->id_rencana_studi }}">
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#rejectModal{{ $rs->id_rencana_studi }}">
                                                 <i class="mdi mdi-close"></i> Tolak
                                             </button>
                                         @endif
@@ -60,20 +63,24 @@
                                 <div class="modal fade" id="rejectModal{{ $rs->id_rencana_studi }}" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form action="{{ route('persetujuan-krs.reject', $rs->id_rencana_studi) }}" method="POST">
+                                            <form action="{{ route('persetujuan-krs.reject', $rs->id_rencana_studi) }}"
+                                                method="POST">
                                                 @csrf
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Tolak KRS</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Alasan Penolakan <span class="text-danger">*</span></label>
+                                                        <label class="form-label">Alasan Penolakan <span
+                                                                class="text-danger">*</span></label>
                                                         <textarea name="catatan" class="form-control" rows="4" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Batal</button>
                                                     <button type="submit" class="btn btn-danger">Tolak KRS</button>
                                                 </div>
                                             </form>
@@ -96,3 +103,7 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <link href="{{ url('css/dashboard.css') }}" rel="stylesheet" />
+@endpush

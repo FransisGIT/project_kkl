@@ -105,3 +105,85 @@
 }
 
 /* Pastikan dashboard.css dimuat setelah app.css agar override bekerja */
+
+:root {
+    --grad-light: #7289DA;
+    --grad-dark: #3D4974;
+    --card-radius: 10px;
+    --card-shadow: 0 10px 30px rgba(45, 60, 120, 0.10);
+}
+
+/* ===== Opsi A: class khusus (direkomendasikan) ===== */
+/* Kartu statistik utama */
+.card.stat-card {
+    background: linear-gradient(90deg, var(--grad-light), var(--grad-dark));
+    color: #fff;
+    border: none;
+    border-radius: var(--card-radius);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 88px;
+}
+
+/* Alternatif: kebalikan arah gradasi (untuk variasi) */
+.card.stat-card.alt {
+    background: linear-gradient(90deg, var(--grad-dark), var(--grad-light));
+}
+
+/* Judul & angka dalam kartu */
+.card.stat-card .card-body h6 {
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.card.stat-card .card-body h2 {
+    color: #fff;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* ===== Opsi B: override langsung .bg-primary / .bg-info (jika tidak mau ubah HTML) ===== */
+/* Hanya targetkan di halaman dashboard jika kamu punya parent spesifik,
+   kalau dashboard.css sudah hanya dipakai untuk dashboard, ini boleh dipakai global */
+.dashboard-stats .card.bg-primary,
+.dashboard-stats .card.bg-info,
+.card.bg-primary.dashboard-stat,
+.card.bg-info.dashboard-stat {
+    /* gunakan same gradient sehingga bg-primary/bg-info yang sekarang dipakai akan berubah */
+    background: linear-gradient(90deg, var(--grad-light), var(--grad-dark)) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+/* Jika ingin varian kedua untuk bg-info */
+.dashboard-stats .card.bg-info.alt {
+    background: linear-gradient(90deg, var(--grad-dark), var(--grad-light)) !important;
+}
+
+/* ===== tambahan styling ringkas ===== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+/* pastikan hover halus */
+.card.stat-card,
+.dashboard-stats .card.bg-primary,
+.dashboard-stats .card.bg-info {
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.card.stat-card:hover,
+.dashboard-stats .card.bg-primary:hover,
+.dashboard-stats .card.bg-info:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(45, 60, 120, 0.12);
+}
