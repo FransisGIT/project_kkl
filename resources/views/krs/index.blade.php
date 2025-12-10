@@ -6,17 +6,18 @@
             <div class="card card-body shadow-sm">
                 <h3 class="mb-4 fw-bold">Rencana Studi</h3>
 
-                @if(isset($rencanaAktif) && $rencanaAktif)
-                    <div class="alert alert-{{ $rencanaAktif->status === 'disetujui' ? 'success' : ($rencanaAktif->status === 'ditolak' ? 'danger' : 'warning') }}">
+                @if (isset($rencanaAktif) && $rencanaAktif)
+                    <div
+                        class="alert alert-{{ $rencanaAktif->status === 'disetujui' ? 'success' : ($rencanaAktif->status === 'ditolak' ? 'danger' : 'warning') }}">
                         <strong>Status KRS:</strong>
-                        @if($rencanaAktif->status === 'menunggu')
+                        @if ($rencanaAktif->status === 'menunggu')
                             Menunggu Persetujuan
                         @elseif($rencanaAktif->status === 'disetujui')
                             Disetujui
                         @else
                             Ditolak
                         @endif
-                        @if($rencanaAktif->catatan)
+                        @if ($rencanaAktif->catatan)
                             <br><small>Catatan: {{ $rencanaAktif->catatan }}</small>
                         @endif
                     </div>
@@ -115,6 +116,10 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <link href="{{ url('css/dashboard.css') }}" rel="stylesheet" />
+@endpush
 
 @push('styles')
     <link href="{{ asset('assets/libs/jquery-confirm/jquery-confirm.min.css') }}" rel="stylesheet" />

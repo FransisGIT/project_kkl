@@ -6,16 +6,16 @@
             <div class="card card-body shadow-sm">
                 <h3 class="mb-4 fw-bold">Jadwal Kuliah Saya</h3>
 
-                @if($statusKrs === 'disetujui')
+                @if ($statusKrs === 'disetujui')
                     <div class="alert alert-success">
                         <i class="mdi mdi-check-circle me-2"></i>
                         <strong>KRS Anda telah disetujui!</strong>
-                        @if($rencanaAktif && $rencanaAktif->catatan)
+                        @if ($rencanaAktif && $rencanaAktif->catatan)
                             <br><small>Catatan: {{ $rencanaAktif->catatan }}</small>
                         @endif
                     </div>
 
-                    @if($mataKuliahList->count() > 0)
+                    @if ($mataKuliahList->count() > 0)
                         <div class="row mb-4">
                             <div class="col-md-3">
                                 <div class="card bg-primary text-white">
@@ -37,19 +37,21 @@
 
                         @php
                             $hariUrutan = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-                            $mataKuliahGrouped = $mataKuliahList->groupBy('hari')->sortBy(function($group, $hari) use ($hariUrutan) {
-                                $index = array_search($hari, $hariUrutan);
-                                return $index !== false ? $index : 999;
-                            });
+                            $mataKuliahGrouped = $mataKuliahList
+                                ->groupBy('hari')
+                                ->sortBy(function ($group, $hari) use ($hariUrutan) {
+                                    $index = array_search($hari, $hariUrutan);
+                                    return $index !== false ? $index : 999;
+                                });
                         @endphp
 
-                        @foreach($mataKuliahGrouped as $hari => $mkList)
+                        @foreach ($mataKuliahGrouped as $hari => $mkList)
                             <div class="mb-4 py-5">
                                 <h5 class="fw-bold mb-3">
                                     <i class="mdi mdi-calendar me-2"></i>{{ $hari ?? 'Hari Tidak Ditentukan' }}
                                 </h5>
                                 <div class="row">
-                                    @foreach($mkList->sortBy('jam') as $mk)
+                                    @foreach ($mkList->sortBy('jam') as $mk)
                                         <div class="col-md-6 col-lg-4 mb-3">
                                             <div class="card border-start border-primary border-4 shadow-sm h-100">
                                                 <div class="card-body">
@@ -95,7 +97,6 @@
                             KRS Anda disetujui tetapi tidak ada mata kuliah yang terdaftar.
                         </div>
                     @endif
-
                 @elseif($statusKrs === 'menunggu')
                     <div class="alert alert-warning">
                         <i class="mdi mdi-clock-outline me-2"></i>
@@ -106,12 +107,11 @@
                         <i class="mdi mdi-clock-alert-outline" style="font-size: 100px; color: #ffc107;"></i>
                         <p class="mt-3 text-muted">Pengajuan KRS Anda sedang dalam proses review</p>
                     </div>
-
                 @elseif($statusKrs === 'ditolak')
                     <div class="alert alert-danger">
                         <i class="mdi mdi-close-circle me-2"></i>
                         <strong>KRS Anda ditolak.</strong>
-                        @if($rencanaAktif && $rencanaAktif->catatan)
+                        @if ($rencanaAktif && $rencanaAktif->catatan)
                             <br><small>Alasan: {{ $rencanaAktif->catatan }}</small>
                         @endif
                         <br><small>Silakan ajukan ulang KRS Anda di menu KRS.</small>
@@ -124,7 +124,6 @@
                             Ke Halaman KRS
                         </a>
                     </div>
-
                 @else
                     <div class="alert alert-info">
                         <i class="mdi mdi-information-outline me-2"></i>
@@ -145,3 +144,7 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <link href="{{ url('css/dashboard.css') }}" rel="stylesheet" />
+@endpush

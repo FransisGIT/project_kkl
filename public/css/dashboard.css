@@ -1,0 +1,107 @@
+:root {
+    /* variabel gradasi baru sesuai permintaan */
+    --sidebar-start: #7289DA;
+    /* biru muda (atas) */
+    --sidebar-end: #3D4974;
+    /* biru tua (bawah) */
+    --card-start: #7289DA;
+    /* kartu statistik - atas */
+    --card-end: #3D4974;
+    /* kartu statistik - bawah */
+    --selected-row: #7AF26B;
+    /* hijau baris terpilih (tetap) */
+    --selected-row-contrast: #06320a;
+    /* override beberapa var bs agar teks di sidebar kontras */
+    --bs-sidebar-item: #ffffff;
+    --bs-sidebar-item-hover: rgba(255, 255, 255, 0.95);
+    --bs-sidebar-item-active: #ffffff;
+    --bs-sidebar-item-active-bg: rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar: gunakan gradasi */
+.app-sidebar-menu {
+    background: linear-gradient(180deg, var(--sidebar-start), var(--sidebar-end)) !important;
+    color: #fff;
+}
+
+/* Logo area */
+.logo-box {
+    padding: 18px 16px;
+}
+
+.logo-box img {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+}
+
+/* Side menu links */
+#side-menu a {
+    color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 6px 10px;
+    transition: background .18s ease, transform .12s ease;
+}
+
+#side-menu a .mdi {
+    color: rgba(255, 255, 255, 0.9);
+    margin-right: 8px;
+}
+
+#side-menu a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(2px);
+}
+
+/* Active menu */
+#side-menu a.active {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+    border-left: 4px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Card statistik: gradasi dan teks putih */
+.dashboard-stats .card,
+.card.stat-card {
+    background: linear-gradient(180deg, var(--card-start), var(--card-end)) !important;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(50, 60, 120, 0.12);
+}
+
+/* Baris tabel yang dipilih (mis. diberi class .row-selected oleh JS) */
+.table tbody tr.row-selected {
+    background: linear-gradient(90deg, rgba(122, 242, 107, 0.18), rgba(122, 242, 107, 0.10)) !important;
+    color: var(--selected-row-contrast);
+    border-left: 4px solid rgba(122, 242, 107, 0.95);
+}
+
+.table tbody tr.row-selected td:first-child {
+    background: var(--selected-row);
+    color: var(--selected-row-contrast);
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+/* Slider / range (follow card color) */
+.form-range::-webkit-slider-thumb {
+    background-color: var(--card-start) !important;
+}
+
+.form-range::-moz-range-thumb {
+    background-color: var(--card-start) !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+    #side-menu a {
+        padding: 10px 12px;
+        margin: 4px 6px;
+    }
+
+    .dashboard-stats .card .stat-number {
+        font-size: 28px;
+    }
+}
+
+/* Pastikan dashboard.css dimuat setelah app.css agar override bekerja */
