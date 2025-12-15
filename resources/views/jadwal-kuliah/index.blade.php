@@ -146,5 +146,5 @@
 @endsection
 
 @push('styles')
-    <link href="{{ url('css/dashboard.css') }}" rel="stylesheet" />
+    <link href="{{ url('assets/css/dashboard.css') }}" rel="stylesheet" />
 @endpush
