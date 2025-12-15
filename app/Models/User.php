@@ -93,4 +93,12 @@ class User extends Authenticatable
         }
         return $rencanaAktif->id_mata_kuliah;
     }
+
+    /**
+     * Get nilai mahasiswa
+     */
+    public function nilaiMahasiswa()
+    {
+        return $this->hasMany(\App\Models\NilaiMahasiswa::class, 'id_user', 'id_user');
+    }
 }

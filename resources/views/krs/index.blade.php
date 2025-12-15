@@ -71,6 +71,7 @@
                                     <th>Nama MK</th>
                                     <th>SKS</th>
                                     <th>Semester</th>
+                                    <th>Prasyarat</th>
                                     <th>Group</th>
                                     <th>Hari</th>
                                     <th>Jam</th>
@@ -83,13 +84,43 @@
                                 @forelse ($mataKuliah as $mk)
                                     @php
                                         $isAmbil = in_array($mk->id_matakuliah, $mkDiambil);
-                                        $bgClass = $isAmbil ? 'bg-success-subtle' : 'bg-info-subtle';
+
+                                        // Cek prasyarat
+                                        $prasyaratTerpenuhi = true;
+                                        $prasyaratInfo = '';
+                                        $nilaiLulus = \App\Models\NilaiMahasiswa::where('id_user', Auth::id())
+                                            ->where('status', 'lulus')
+                                            ->pluck('id_matakuliah')
+                                            ->toArray();
+
+                                        if (!empty($mk->prasyarat_ids)) {
+                                            $prasyaratMk = \App\Models\MataKuliah::whereIn('id_matakuliah', $mk->prasyarat_ids)->get();
+                                            $prasyaratNama = [];
+
+                                            foreach ($prasyaratMk as $pra) {
+                                                $terpenuhi = in_array($pra->id_matakuliah, $nilaiLulus);
+                                                if (!$terpenuhi) {
+                                                    $prasyaratTerpenuhi = false;
+                                                }
+                                                $icon = $terpenuhi ? '✓' : '✗';
+                                                $prasyaratNama[] = $icon . ' ' . $pra->kode_matakuliah;
+                                            }
+
+                                            $prasyaratInfo = implode(', ', $prasyaratNama);
+                                        } else {
+                                            $prasyaratInfo = '-';
+                                        }
+
+                                        $bgClass = $isAmbil ? 'bg-success-subtle' : ($prasyaratTerpenuhi ? 'bg-info-subtle' : 'bg-danger-subtle');
                                     @endphp
                                     <tr class="{{ $bgClass }}">
                                         <td>{{ $mk->kode_matakuliah }}</td>
                                         <td class="text-start">{{ $mk->nama_matakuliah }}</td>
-                                        <td>{{ $mk->sks }}</td>
+                                        <td class="sks-cell" data-sks="{{ $mk->sks }}">{{ $mk->sks }}</td>
                                         <td>{{ $mk->semester }}</td>
+                                        <td class="text-start" style="font-size: 0.85rem;">
+                                            {!! $prasyaratInfo !!}
+                                        </td>
                                         <td>{{ $mk->group }}</td>
                                         <td>{{ $mk->hari }}</td>
                                         <td>{{ $mk->jam }}</td>
@@ -97,18 +128,25 @@
                                         <td>{{ $mk->peserta }}</td>
                                         <td>
                                             <input type="checkbox" name="matakuliah[]" value="{{ $mk->id_matakuliah }}"
-                                                {{ $isAmbil ? 'checked' : '' }}>
+                                                class="krs-checkbox"
+                                                {{ $isAmbil ? 'checked' : '' }}
+                                                {{ !$prasyaratTerpenuhi ? 'disabled title="Prasyarat belum terpenuhi"' : '' }}>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="10" class="text-center">Tidak ada data mata kuliah.</td>
+                                        <td colspan="11" class="text-center">Tidak ada data mata kuliah.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="badge bg-primary fs-6 px-3 py-2">
+                                Total SKS Dipilih: <span id="total-sks">0</span> / 24
+                            </span>
+                        </div>
                         <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">Pengajuan KRS</button>
                     </div>
                 </form>
@@ -132,4 +170,46 @@
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
 
     <script src="{{ asset('assets/js/pages/admin/categories/page.js') }}"></script>
+
+    <script>
+        // Hitung total SKS saat halaman dimuat
+        function hitungTotalSKS() {
+            let totalSKS = 0;
+            $('.krs-checkbox:checked:not(:disabled)').each(function() {
+                let row = $(this).closest('tr');
+                let sks = parseInt(row.find('.sks-cell').data('sks')) || 0;
+                totalSKS += sks;
+            });
+
+            $('#total-sks').text(totalSKS);
+
+            // Beri warning jika lebih dari 24
+            if (totalSKS > 24) {
+                $('#total-sks').parent().removeClass('bg-primary').addClass('bg-danger');
+            } else {
+                $('#total-sks').parent().removeClass('bg-danger').addClass('bg-primary');
+            }
+
+            return totalSKS;
+        }
+
+        // Update saat checkbox berubah
+        $(document).ready(function() {
+            hitungTotalSKS();
+
+            $('.krs-checkbox').change(function() {
+                hitungTotalSKS();
+            });
+
+            // Validasi sebelum submit
+            $('form').submit(function(e) {
+                let totalSKS = hitungTotalSKS();
+                if (totalSKS > 24) {
+                    e.preventDefault();
+                    alert('Total SKS (' + totalSKS + ') melebihi batas maksimal 24 SKS!');
+                    return false;
+                }
+            });
+        });
+    </script>
 @endpush

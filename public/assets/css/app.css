@@ -14792,6 +14792,10 @@ html[data-bs-theme=dark] .logo-dark {
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.04);
 }
 
+.bg-1{
+    background: var(--bs-sidebar-bg);
+}
+
 #sidebar-menu {
     padding: 0px 9px 0px 9px;
 }
