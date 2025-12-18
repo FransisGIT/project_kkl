@@ -1,9 +1,16 @@
 @extends('app', ['title' => 'Riwayat Dispensasi'])
 
 @section('content')
-    <div class="card p-4 shadow-sm">
+    <div class="card p-4 mt-3 shadow-sm">
         <h4>Riwayat Pengajuan Dispensasi</h4>
         <hr>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary btn-sm btn-preview-pdf"
+                data-url="{{ asset('assets/media/sample-dispensasi.pdf') }}"
+                data-filename="sample-dispensasi.pdf">
+                Surat Dispensasi (Dummy)
+            </button>
+        </div>
 
         <table class="table">
             <thead>
@@ -14,28 +21,71 @@
                     <th>Deadline</th>
                     <th>Status</th>
                     <th>File</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse ($data as $d)
                     <tr>
-                        <td>{{ $d->tahun_akademik }}</td>
-                        <td>{{ $d->jumlah_pengajuan }}</td>
-                        <td>{{ $d->no_hp }}</td>
-                        <td>{{ $d->tanggal_deadline }}</td>
+                        <td>{{ $d->tahun_akademik ?? '-' }}</td>
+                        <td>{{ $d->jumlah_pengajuan ?? $d->jumlah ?? '-' }}</td>
+                        <td>{{ $d->no_hp ?? '-' }}</td>
+                        <td>{{ $d->tanggal_deadline ?? '-' }}</td>
                         <td>
-                            @if ($d->status == 'menunggu')
+                            @if (in_array($d->status, ['menunggu']))
                                 <span class="badge bg-warning">Menunggu</span>
                             @elseif ($d->status == 'disetujui')
                                 <span class="badge bg-success">Disetujui</span>
-                            @else
+                            @elseif ($d->status == 'ditolak')
                                 <span class="badge bg-danger">Ditolak</span>
+                            @elseif ($d->status == 'diterima_dosen')
+                                <span class="badge bg-info">Diterima Dosen</span>
+                            @elseif ($d->status == 'diterima_warek')
+                                <span class="badge bg-primary">Diterima Warek</span>
+                            @elseif ($d->status == 'diterima_keuangan')
+                                <span class="badge bg-secondary">Diterima Keuangan</span>
+                            @else
+                                <span class="badge bg-light text-dark">{{ $d->status }}</span>
                             @endif
                         </td>
                         <td>
-                            @if ($d->file_surat)
-                                <a href="{{ asset('storage/' . $d->file_surat) }}" target="_blank">Download</a>
+                            @php
+                                $file = $d->file_pdf ?? $d->file_surat ?? null;
+                            @endphp
+                            @if ($file)
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-preview-pdf"
+                                    data-url="{{ asset('storage/' . $file) }}"
+                                    data-filename="{{ basename($file) }}">
+                                    Preview
+                                </button>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>
+                            @php $me = auth()->user(); @endphp
+                            @if(in_array($me->id_role, [5,4]))
+                                @php
+                                    $canProcess = false;
+                                    if ($me->id_role == 5 && $d->status == 'menunggu') $canProcess = true;
+                                    if ($me->id_role == 4 && $d->status == 'diterima_warek') $canProcess = true;
+                                @endphp
+
+                                @if($canProcess)
+                                    <form action="{{ route('dispensasi.approve', $d->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="note" value="Disetujui oleh {{ $me->name }}">
+                                        <button class="btn btn-sm btn-success">Approve</button>
+                                    </form>
+                                    <form action="{{ route('dispensasi.reject', $d->id) }}" method="POST" class="d-inline ms-1">
+                                        @csrf
+                                        <input type="hidden" name="note" value="Ditolak oleh {{ $me->name }}">
+                                        <button class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                @else
+                                    -
+                                @endif
                             @else
                                 -
                             @endif
@@ -43,130 +93,60 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Belum ada pengajuan dispensasi</td>
+                        <td colspan="7" class="text-center">Belum ada pengajuan dispensasi</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-
     </div>
+
+    {{-- PDF Preview Modal (placed inside view push scripts) --}}
+    <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Preview Surat Dispensasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height:80vh;">
+                    <iframe id="pdf-frame" src="{{ asset("assets/media/sample-dispensasi.pdf") }}" frameborder="0" style="width:100%; height:100%;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <a id="pdf-download" class="btn btn-primary" href="#" target="_blank">Download</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Sistem Dispensasi Mahasiswa</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 30px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h2 {
-            margin-top: 0;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        input, textarea, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-        textarea {
-            resize: vertical;
-        }
-        button {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #219150;
-        }
-        footer {
-            text-align: center;
-            padding: 15px;
-            color: #777;
-            font-size: 13px;
-        }
-    </style>
-</head>
-<body>
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btn-preview-pdf').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    var url = btn.getAttribute('data-url');
+                    var filename = btn.getAttribute('data-filename') || 'file.pdf';
+                    var iframe = document.getElementById('pdf-frame');
+                    var download = document.getElementById('pdf-download');
+                    iframe.setAttribute('src', url);
+                    download.setAttribute('href', url);
+                    download.setAttribute('download', filename);
+                    var modalEl = document.getElementById('pdfPreviewModal');
+                    var modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                });
+            });
 
-<header>
-    <h1>SIAKAD - Pengajuan Dispensasi Mahasiswa</h1>
-</header>
-
-<div class="container">
-    <h2>Form Pengajuan Dispensasi</h2>
-
-    <!-- FORM DISPENSASI -->
-    <form action="proses_dispensasi.php" method="post">
-        <label>NIM</label>
-        <input type="text" name="nim" placeholder="Masukkan NIM" required>
-
-        <label>Nama Mahasiswa</label>
-        <input type="text" name="nama" placeholder="Masukkan Nama" required>
-
-        <label>Program Studi</label>
-        <input type="text" name="prodi" placeholder="Masukkan Program Studi" required>
-
-        <label>Mata Kuliah</label>
-        <input type="text" name="matkul" placeholder="Masukkan Mata Kuliah" required>
-
-        <label>Jenis Dispensasi</label>
-        <select name="jenis" required>
-            <option value="">-- Pilih --</option>
-            <option value="Sakit">Sakit</option>
-            <option value="Izin Kegiatan">Izin Kegiatan</option>
-            <option value="Keperluan Keluarga">Keperluan Keluarga</option>
-        </select>
-
-        <label>Alasan Dispensasi</label>
-        <textarea name="alasan" rows="4" placeholder="Tuliskan alasan dispensasi" required></textarea>
-
-        <label>Tanggal</label>
-        <input type="date" name="tanggal" required>
-
-        <button type="submit">Kirim Pengajuan</button>
-    </form>
-</div>
-
-<footer>
-    &copy; 2025 Sistem Informasi Akademik
-</footer>
-
-</body>
-</html>
-=======
-@push('styles')
-    <link href="{{ url('assets/css/dashboard.css') }}" rel="stylesheet" />
+            // Clear iframe on modal hide to stop PDF loading
+            var modalEl = document.getElementById('pdfPreviewModal');
+            if (modalEl) {
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    var iframe = document.getElementById('pdf-frame');
+                    if (iframe) iframe.setAttribute('src', 'about:blank');
+                });
+            }
+        });
+    </script>
 @endpush
->>>>>>> c1b1388ccc0efa547c9a4b88a81aa64400aeb5dc

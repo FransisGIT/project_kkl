@@ -46,7 +46,7 @@
                         @endphp
 
                         @foreach ($mataKuliahGrouped as $hari => $mkList)
-                            <div class="mb-4 py-5">
+                            <div class="mb-4 py-2">
                                 <h5 class="fw-bold mb-3">
                                     <i class="mdi mdi-calendar me-2"></i>{{ $hari ?? 'Hari Tidak Ditentukan' }}
                                 </h5>

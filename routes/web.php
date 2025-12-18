@@ -51,4 +51,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'store'])
         ->name('dispensasi.store');
+
+    Route::post('/dispensasi/{id}/approve', [\App\Http\Controllers\DispensasiController::class, 'approve'])
+        ->name('dispensasi.approve');
+
+    Route::post('/dispensasi/{id}/reject', [\App\Http\Controllers\DispensasiController::class, 'reject'])
+        ->name('dispensasi.reject');
 });

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             MataKuliahSeeder::class,
             NilaiMahasiswaSeeder::class,
+            \Database\Seeders\DispensasiSeeder::class,
         ]);
     }
 }
