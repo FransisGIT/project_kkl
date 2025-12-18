@@ -68,6 +68,33 @@ class RencanaStudiController extends Controller
             return redirect()->back()->with('error', 'Pilih minimal 1 mata kuliah!');
         }
 
+        // Ambil data mata kuliah yang dipilih
+        $mataKuliahDipilih = MataKuliah::whereIn('id_matakuliah', $mkDipilih)->get();
+
+        // Validasi maksimal 24 SKS
+        $totalSks = $mataKuliahDipilih->sum('sks');
+        if ($totalSks > 24) {
+            return redirect()->back()->with('error', "Total SKS yang Anda pilih ($totalSks SKS) melebihi batas maksimal 24 SKS");
+        }
+
+        // Validasi prasyarat - ambil mata kuliah yang sudah lulus
+        $nilaiMahasiswa = \App\Models\NilaiMahasiswa::where('id_user', $user->id_user)
+            ->where('status', 'lulus')
+            ->pluck('id_matakuliah')
+            ->toArray();
+
+        foreach ($mataKuliahDipilih as $mataKuliah) {
+            if (!empty($mataKuliah->prasyarat_ids)) {
+                foreach ($mataKuliah->prasyarat_ids as $prasyaratId) {
+                    if (!in_array($prasyaratId, $nilaiMahasiswa)) {
+                        $prasyaratMk = MataKuliah::find($prasyaratId);
+                        $namaPrasyarat = $prasyaratMk ? $prasyaratMk->nama_matakuliah : 'mata kuliah prasyarat';
+                        return redirect()->back()->with('error', "Anda belum menyelesaikan mata kuliah prasyarat ($namaPrasyarat) untuk mengambil {$mataKuliah->nama_matakuliah}");
+                    }
+                }
+            }
+        }
+
         // Simpan sebagai JSON dengan status menunggu persetujuan
         RencanaStudi::create([
             'id_user' => $user->id_user,
@@ -75,6 +102,6 @@ class RencanaStudiController extends Controller
             'status' => 'menunggu',
         ]);
 
-        return redirect()->route('krs.index')->with('success', 'Pengajuan KRS berhasil! Status: Menunggu Persetujuan.');
+        return redirect()->route('krs.index')->with('success', "Pengajuan KRS berhasil ($totalSks SKS)! Status: Menunggu Persetujuan.");
     }
 }

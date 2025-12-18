@@ -11,6 +11,7 @@
     <meta name="color-scheme" content="light">
 
     <!-- App css -->
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
     <!-- Icons -->
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
@@ -22,13 +23,13 @@
 
 <body>
     <!-- Begin page -->
-    <div class="account-page">
+    <div class="account-page bg-login">
         <div class="container-fluid p-0">
             <div class="row align-items-center g-0 px-3 py-3 vh-100">
                 <div class="col-xl-12">
                     <div class="row">
                         <div class="col-md-12 col-xl-4 mx-auto">
-                            <div class="card bg-primary-subtle rounded-4">
+                            <div class="card bg-1 rounded-4">
                                 <div class="card-body">
                                     <div class="mb-0 p-0 p-lg-3">
                                         <div class="mb-0 border-0 p-md-4 p-lg-0">
@@ -50,17 +51,17 @@
                                             </div> --}}
 
                                             <div class="auth-title-section mb-4 text-lg-start text-center">
-                                                <h3 class="text-dark fw-semibold mb-3">
-                                                    Silakan masuk untuk melanjutkan
+                                                <h3 class="text-white fw-semibold mb-3">
+                                                    Halaman Login
                                                 </h3>
                                             </div>
 
                                             <div class="pt-0">
                                                 <form method="POST" action="{{ route('fungsi-login') }}" class="my-4">
                                                     @csrf
-                                                    <div class="form-group mb-3">
+                                                    <div class="form-group mb-3 text-white">
                                                         <label for="login" class="form-label">
-                                                            username
+                                                            Username
                                                         </label>
                                                         <input type="text" id="login" name="name"
                                                             class="form-control @error('login')
@@ -75,16 +76,16 @@
                                                         @enderror
                                                     </div>
 
-                                                    <div class="form-group mb-3">
+                                                    <div class="form-group mb-3 text-white">
                                                         <label for="password" class="form-label">
-                                                            Kata Sandi
+                                                            Password
                                                         </label>
                                                         <div class="input-group">
                                                             <input type="password" id="password" name="password"
                                                                 class="form-control @error('password') is-invalid @enderror"
-                                                                placeholder="Masukkan kata sandi" autocomplete="off"
+                                                                placeholder="Masukkan password" autocomplete="off"
                                                                 required>
-                                                            <span class="input-group-text bg-transparent"
+                                                            <span class="input-group-text bg-white"
                                                                 id="togglePassword" style="cursor: pointer;">
                                                                 <i class="ti ti-eye" id="passwordIcon"></i>
                                                             </span>
@@ -100,7 +101,7 @@
                                                     <div class="form-group mb-0 row">
                                                         <div class="col-12">
                                                             <div class="d-grid">
-                                                                <button class="btn btn-primary fw-semibold g-recaptcha"
+                                                                <button class="btn bg-2 fw-semibold text-white"
                                                                     type="submit">
                                                                     Masuk
                                                                 </button>

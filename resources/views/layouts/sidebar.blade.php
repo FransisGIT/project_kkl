@@ -7,33 +7,33 @@
             <div class="logo-box">
                 <a href="" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="" alt="" height="22">
+                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="" alt="" height="45">
+                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="45">
                     </span>
                 </a>
-                <a href="" class="logo logo-light">
+                {{-- <a href="" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="" alt="" height="22">
                     </span>
                     <span class="logo-lg">
                         <img src="" alt="" height="45">
                     </span>
-                </a>
+                </a> --}}
                 <a href="" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="" alt="" height="22">
+                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="" alt="" height="45">
+                        <img src="{{ asset('images/logo-mandala.png') }}" alt="Logo" height="45">
                     </span>
                 </a>
             </div>
 
             <ul id="side-menu">
                 {{-- Menu untuk Mahasiswa (id_role = 3) --}}
-                @if(Auth::user()->id_role == 3)
+                @if (Auth::user()->id_role == 3)
                     <li>
                         <a href="{{ route('beranda.index') }}"
                             class="{{ request()->routeIs('beranda.index') ? 'active' : '' }}">
@@ -42,20 +42,22 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('krs.index') }}" class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
+                        <a href="{{ route('krs.index') }}"
+                            class="{{ request()->routeIs('krs.index') ? 'active' : '' }}">
                             <span class="mdi mdi-file-document-outline fs-18 me-1"></span>
                             <span>KRS</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('jadwal-kuliah.index') }}" class="{{ request()->routeIs('jadwal-kuliah.index') ? 'active' : '' }}">
+                        <a href="{{ route('jadwal-kuliah.index') }}"
+                            class="{{ request()->routeIs('jadwal-kuliah.index') ? 'active' : '' }}">
                             <span class="mdi mdi-calendar-clock fs-18 me-1"></span>
                             <span>Jadwal Kuliah</span>
                         </a>
                     </li>
                 @endif
 
-                @if(in_array(Auth::user()->id_role, [1, 2]))
+                @if (in_array(Auth::user()->id_role, [1, 2]))
                     <li>
                         <a href="{{ route('persetujuan-krs.index') }}"
                             class="{{ request()->routeIs('persetujuan-krs.*') ? 'active' : '' }}">

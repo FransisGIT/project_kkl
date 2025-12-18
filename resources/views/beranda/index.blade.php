@@ -2,16 +2,8 @@
 
 
 @section('content')
-    {{-- <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-        <div class="flex-grow-1">
-            <h4 class="fs-18 fw-semibold m-0">
-                Dashboard
-            </h4>
-        </div>
-    </div> --}}
-
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 mt-3">
             <div class="card card-body shadow-sm">
                 <h3 class="mb-4 fw-bold">Beranda</h3>
                 {{-- Pesan Sukses --}}
@@ -19,9 +11,9 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <div class="row mb-4">
+                <div class="row mb-4 dashboard-stats">
                     <div class="col-md-4">
-                        <div class="card text-center bg-primary text-white mb-3">
+                        <div class="card text-center stat-card mb-3">
                             <div class="card-body">
                                 <h6 class="mb-1">Jumlah SKS yang diambil</h6>
                                 <h2 class="mb-0">{{ $jumlahSKS ?? 0 }}</h2>
@@ -29,7 +21,8 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card text-center bg-info text-white mb-3">
+                        <!-- contoh varian gradasi kebalikan -->
+                        <div class="card text-center stat-card alt mb-3">
                             <div class="card-body">
                                 <h6 class="mb-1">Jumlah SKS sudah ditempuh</h6>
                                 <h2 class="mb-0">{{ $jumlahSKSTempuh ?? 0 }}</h2>
@@ -131,7 +124,7 @@
 @push('styles')
     <link href="{{ asset('assets/libs/jquery-confirm/jquery-confirm.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="{{ url('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/css/dashboard.css') }}">
 @endpush
 
 @push('scripts')

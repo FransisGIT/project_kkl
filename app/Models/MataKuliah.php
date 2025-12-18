@@ -36,6 +36,14 @@ class MataKuliah extends Model
         'jam',
         'kapasitas',
         'peserta',
+        'prasyarat_ids',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'prasyarat_ids' => 'array',
     ];
 
     /**
@@ -53,5 +61,24 @@ class MataKuliah extends Model
     public function rencanaStudi()
     {
         return $this->hasMany(RencanaStudi::class, 'id_matakuliah', 'id_matakuliah');
+    }
+
+    /**
+     * Get mata kuliah prasyarat
+     */
+    public function prasyarat()
+    {
+        if (empty($this->prasyarat_ids)) {
+            return collect([]);
+        }
+        return MataKuliah::whereIn('id_matakuliah', $this->prasyarat_ids)->get();
+    }
+
+    /**
+     * Get nilai mahasiswa for this mata kuliah
+     */
+    public function nilaiMahasiswa()
+    {
+        return $this->hasMany(\App\Models\NilaiMahasiswa::class, 'id_matakuliah', 'id_matakuliah');
     }
 }

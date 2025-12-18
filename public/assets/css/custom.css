@@ -1,0 +1,19 @@
+.bg-3 {
+    background: linear-gradient(180deg, #7289DA 0%, #3D4974 100%) !important;
+}
+
+.bg-1 {
+    background: linear-gradient(180deg, #7289DA 0%, #3D4974 100%);
+}
+
+.bg-2 {
+    background: linear-gradient(180deg, #7289DA 100%);
+}
+
+.bg-login{
+    background-image: url('../images/bg-login.jpg');
+    background-size: cover;
+    object-fit: cover;
+    width: 100%;
+    background-repeat: no-repeat;
+}
