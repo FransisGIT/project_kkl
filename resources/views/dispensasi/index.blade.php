@@ -5,9 +5,9 @@
         <h4>Riwayat Pengajuan Dispensasi</h4>
         <hr>
         <div class="mb-3 d-flex gap-2">
-            <a href="{{ asset('assets/media/sample-dispensasi.pdf') }}" target="_blank" rel="noopener"
+            <a href="{{ asset('assets/media/sample-dispensasi.docx') }}" target="_blank" rel="noopener"
                 class="btn btn-primary btn-sm">
-                Surat Dispensasi (Dummy)
+                Surat Dispensasi
             </a>
             @php $me = auth()->user(); @endphp
             @if ($me->id_role == 3)
@@ -141,7 +141,7 @@
 
 @endsection
 
-@include('dispensasi._modal_create')
+@include('dispensasi.modal_create')
 
 
 
