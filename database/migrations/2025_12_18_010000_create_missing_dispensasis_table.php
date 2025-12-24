@@ -18,7 +18,7 @@ class CreateMissingDispensasisTable extends Migration
                 $table->string('no_hp')->nullable();
                 $table->date('tanggal_deadline')->nullable();
                 $table->string('file_surat')->nullable();
-                $table->string('file_pdf')->nullable();
+                $table->string('surat_dispensasi')->nullable();
                 $table->enum('status', ['menunggu','diterima_dosen','diterima_warek','diterima_keuangan','disetujui','ditolak'])->default('menunggu');
                 $table->json('approver_notes')->nullable();
                 $table->json('applied_action')->nullable();

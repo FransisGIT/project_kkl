@@ -30,8 +30,8 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">File Surat (PDF)</label>
-            <input type="file" name="file_surat" accept="application/pdf" class="form-control">
+            <label class="form-label">Surat Dispensasi (PDF)</label>
+            <input type="file" name="surat_dispensasi" accept="application/pdf" class="form-control">
           </div>
           <div class="mb-3">
             <label class="form-label">Bukti Pembayaran <span class="text-danger">(wajib)</span></label>

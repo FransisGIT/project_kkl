@@ -12,6 +12,9 @@
             @if($me->id_role == 3)
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalAjukan">Ajukan Dispensasi</button>
             @endif
+            @if($me->id_role == 3)
+                <a href="{{ asset('assets/images/va.jpeg') }}" class="btn btn-success btn-sm">Pembayaran VA</a>
+            @endif
         </div>
 
         <table class="table">
@@ -58,27 +61,24 @@
                         <td>{{ $d->tanggal_deadline ?? '-' }}</td>
                         <td>
                             @if (in_array($d->status, ['menunggu']))
-                                <span class="badge bg-warning">Menunggu</span>
-                            @elseif ($d->status == 'disetujui')
-                                <span class="badge bg-success">Disetujui</span>
                             @elseif ($d->status == 'ditolak')
                                 <span class="badge bg-danger">Ditolak</span>
                             @elseif ($d->status == 'diterima_dosen')
-                                <span class="badge bg-info">Diterima Dosen</span>
+                                <span class="badge bg-success">Diterima Dosen</span>
                             @elseif ($d->status == 'diterima_warek')
-                                <span class="badge bg-primary">Diterima Warek</span>
+                                <span class="badge bg-primary">Diterima Wakil Rektor 2</span>
                             @elseif ($d->status == 'diterima_keuangan')
                                 <span class="badge bg-secondary">Diterima Keuangan</span>
-                            @else
-                                <span class="badge bg-light text-dark">{{ $d->status }}</span>
+                            @elseif ($d->status == 'menunggu_warek')
+                                <span class="badge bg-secondary">Menunggu Wakil Rektor 2</span>
                             @endif
                         </td>
                         <td>
                             @php
-                                $file = $d->file_pdf ?? $d->file_surat ?? null;
+                                $file = $d->surat_dispensasi ?? $d->file_surat ?? null;
                             @endphp
                             @if ($file)
-                                <a href="{{ route('dispensasi.preview', $d->id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ route('dispensasi.preview', $d->id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary m-auto">
                                     Lihat
                                 </a>
                             @else
@@ -87,8 +87,8 @@
                         </td>
                         <td>
                             @if(!empty($d->payment_proof))
-                                <a href="{{ route('dispensasi.payment_proof', $d->id) }}" target="_blank" rel="noopener">
-                                    <img src="{{ route('dispensasi.payment_proof', $d->id) }}" alt="bukti" style="height:48px; object-fit:cover;" />
+                                <a href="{{ route('dispensasi.payment_proof', $d->id) }}" target="_blank" rel="noopener" class="m-auto">
+                                    <img src="{{ route('dispensasi.payment_proof', $d->id) }}" alt="bukti" style="height:68px; object-fit:cover; background-color: rgb(184, 184, 184); padding: 2px; border-radius: 8px" />
                                 </a>
                             @else
                                 -
@@ -96,30 +96,13 @@
                         </td>
                         <td>
                             @php $me = auth()->user(); @endphp
-                            @if($me->id_role == 4)
-                                {{-- Keuangan can validate pending submissions --}}
-                                @if($d->status == 'menunggu')
-                                    <form action="{{ route('dispensasi.approve', $d->id) }}" method="POST" class="d-inline" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="file" name="payment_proof" accept="image/*" class="form-control form-control-sm d-inline-block" style="width:140px;" />
-                                        <input type="hidden" name="note" value="Disetujui oleh {{ $me->name }}">
-                                        <button class="btn btn-sm btn-success ms-1">Approve</button>
-                                    </form>
-                                    <form action="{{ route('dispensasi.reject', $d->id) }}" method="POST" class="d-inline ms-1">
-                                        @csrf
-                                        <input type="hidden" name="note" value="Ditolak oleh {{ $me->name }}">
-                                        <button class="btn btn-sm btn-danger">Reject</button>
-                                    </form>
-                                @else
-                                    -
-                                @endif
-                            @elseif($me->id_role == 5)
-                                {{-- Wakil Rektor 2 approve escalated requests --}}
-                                @if($d->status == 'menunggu_warek')
+                            @if($me->id_role == 4 || $me->id_role == 5)
+                                {{-- Keuangan or Wakil Rektor actions --}}
+                                @if($d->status == 'menunggu' || $d->status == 'menunggu_warek')
                                     <form action="{{ route('dispensasi.approve', $d->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         <input type="hidden" name="note" value="Disetujui oleh {{ $me->name }}">
-                                        <button class="btn btn-sm btn-success">Approve (Warek)</button>
+                                        <button class="btn btn-sm btn-success">Approve</button>
                                     </form>
                                     <form action="{{ route('dispensasi.reject', $d->id) }}" method="POST" class="d-inline ms-1">
                                         @csrf

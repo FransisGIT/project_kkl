@@ -17,7 +17,7 @@ class Dispensasi extends Model
         'no_hp',
         'tanggal_deadline',
         'file_surat',
-        'file_pdf',
+        'surat_dispensasi',
         'payment_proof',
         'status',
         'approver_notes',

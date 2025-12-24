@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('dispensasis', function (Blueprint $table) {
-            $table->string('payment_proof')->nullable()->after('file_pdf');
+            $table->string('payment_proof')->nullable()->after('surat_dispensasi');
         });
     }
 

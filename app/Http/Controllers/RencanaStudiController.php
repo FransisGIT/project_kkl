@@ -95,6 +95,30 @@ class RencanaStudiController extends Controller
             }
         }
 
+        // Cek tunggakan mahasiswa
+        $tunggakan = intval($user->tunggakan ?? 0);
+        if ($tunggakan > 0) {
+            // Jika tunggakan lebih dari 5 juta, simpan pengajuan dan arahkan ke proses persetujuan Warek2
+            if ($tunggakan > 5000000) {
+                RencanaStudi::create([
+                    'id_user' => $user->id_user,
+                    'id_mata_kuliah' => $mkDipilih,
+                    'status' => 'menunggu_warek',
+                ]);
+
+                return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan tetapi menunggu persetujuan Warek2 karena tunggakan Anda sebesar Rp " . number_format($tunggakan,0,',','.'));
+            }
+
+            // Jika ada tunggakan (<= 5 juta), simpan pengajuan sebagai menunggu persetujuan Keuangan
+            RencanaStudi::create([
+                'id_user' => $user->id_user,
+                'id_mata_kuliah' => $mkDipilih,
+                'status' => 'menunggu_keuangan',
+            ]);
+
+            return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan dan menunggu persetujuan Keuangan karena tunggakan Anda sebesar Rp " . number_format($tunggakan,0,',','.'));
+        }
+
         // Simpan sebagai JSON dengan status menunggu persetujuan
         RencanaStudi::create([
             'id_user' => $user->id_user,

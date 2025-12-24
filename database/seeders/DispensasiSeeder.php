@@ -23,7 +23,6 @@ class DispensasiSeeder extends Seeder
                 'jumlah_pengajuan' => 1,
                 'no_hp' => '081234000111',
                 'tanggal_deadline' => now()->addWeeks(2)->toDateString(),
-                'file_surat' => null,
                 'status' => 'menunggu',
             ]);
         }
@@ -36,7 +35,6 @@ class DispensasiSeeder extends Seeder
                 'jumlah_pengajuan' => 1,
                 'no_hp' => '081234000222',
                 'tanggal_deadline' => now()->addWeeks(3)->toDateString(),
-                'file_surat' => null,
                 'status' => 'diterima_dosen',
             ]);
         }
@@ -49,7 +47,6 @@ class DispensasiSeeder extends Seeder
                 'jumlah_pengajuan' => 2,
                 'no_hp' => '081234000333',
                 'tanggal_deadline' => now()->addWeeks(4)->toDateString(),
-                'file_surat' => null,
                 'status' => 'diterima_warek',
             ]);
         }

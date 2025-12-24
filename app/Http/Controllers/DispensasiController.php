@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Dispensasi;
 use App\Models\Role;
 use Illuminate\Support\Str;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Log;
 
 class DispensasiController extends Controller
 {
@@ -61,14 +61,14 @@ class DispensasiController extends Controller
             'jumlah_pengajuan' => 'nullable|integer',
             'no_hp' => 'nullable|string',
             'tanggal_deadline' => 'nullable|date',
-            'file_surat' => 'nullable|mimes:pdf|max:4096',
+            'surat_dispensasi' => 'nullable|mimes:pdf|max:4096',
             'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        $file = null;
+        $suratDispensasi = null;
         $paymentProof = null;
-        if ($request->hasFile('file_surat')) {
-            $file = $request->file('file_surat')->store('surat_dispensasi', 'public');
+        if ($request->hasFile('surat_dispensasi')) {
+            $suratDispensasi = $request->file('surat_dispensasi')->store('surat_dispensasi', 'public');
         }
         if ($request->hasFile('payment_proof')) {
             $paymentProof = $request->file('payment_proof')->store('bukti_pembayaran', 'public');
@@ -81,7 +81,7 @@ class DispensasiController extends Controller
             'jumlah_pengajuan' => $request->input('jumlah_pengajuan'),
             'no_hp' => $request->input('no_hp'),
             'tanggal_deadline' => $request->input('tanggal_deadline'),
-            'file_surat' => $file,
+            'surat_dispensasi' => $suratDispensasi,
             'payment_proof' => $paymentProof,
             'status' => 'menunggu',
         ]);
@@ -169,27 +169,23 @@ class DispensasiController extends Controller
             abort(403);
         }
 
-        $file = $disp->file_surat ?? $disp->file_pdf ?? null;
-        if (!$file) abort(404);
+        $file = $disp->surat_dispensasi ?? $disp->file_surat ?? null;
+        if (!$file) {
+            Log::error('File not found for preview', ['id' => $id]);
+            abort(404);
+        }
 
-        // try storage/app/public
         $storagePath = storage_path('app/public/' . $file);
+        Log::info('Serving file for preview', ['file' => $storagePath]);
+
         if (file_exists($storagePath)) {
-            return response()->file($storagePath, [
+            return response()->make(file_get_contents($storagePath), 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="' . basename($file) . '"'
             ]);
         }
 
-        // try public path
-        $publicPath = public_path($file);
-        if (file_exists($publicPath)) {
-            return response()->file($publicPath, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . basename($file) . '"'
-            ]);
-        }
-
+        Log::error('File does not exist on disk', ['file' => $storagePath]);
         abort(404);
     }
 
@@ -211,6 +207,14 @@ class DispensasiController extends Controller
     }
 
     /**
+     * Show the sample dispensasi template with empty name/NIM/Prodi.
+     */
+    public function sample()
+    {
+        return view('dispensasi.sample');
+    }
+
+    /**
      * Serve payment proof image inline from storage without requiring storage:link.
      */
     public function paymentProof($id)
@@ -224,26 +228,23 @@ class DispensasiController extends Controller
         }
 
         $file = $disp->payment_proof ?? null;
-        if (!$file) abort(404);
+        if (!$file) {
+            Log::error('Payment proof not found', ['id' => $id]);
+            abort(404);
+        }
 
         $storagePath = storage_path('app/public/' . $file);
+        Log::info('Serving payment proof', ['file' => $storagePath]);
+
         if (file_exists($storagePath)) {
             $mimetype = @mime_content_type($storagePath) ?: 'image/jpeg';
-            return response()->file($storagePath, [
+            return response()->make(file_get_contents($storagePath), 200, [
                 'Content-Type' => $mimetype,
                 'Content-Disposition' => 'inline; filename="' . basename($file) . '"'
             ]);
         }
 
-        $publicPath = public_path($file);
-        if (file_exists($publicPath)) {
-            $mimetype = @mime_content_type($publicPath) ?: 'image/jpeg';
-            return response()->file($publicPath, [
-                'Content-Type' => $mimetype,
-                'Content-Disposition' => 'inline; filename="' . basename($file) . '"'
-            ]);
-        }
-
+        Log::error('Payment proof file does not exist on disk', ['file' => $storagePath]);
         abort(404);
     }
 }
