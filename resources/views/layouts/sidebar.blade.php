@@ -1,7 +1,7 @@
 <div class="app-sidebar-menu">
     <div class="h-100" data-simplebar>
 
-        <!--- Sidemenu -->
+
         <div id="sidebar-menu">
 
             <div class="logo-box">
@@ -32,7 +32,7 @@
             </div>
 
             <ul id="side-menu" class="my-4">
-                {{-- Menu untuk Mahasiswa (id_role = 3) --}}
+
                 @if (Auth::user()->id_role == 3)
                     <li>
                         <a href="{{ route('beranda.index') }}"
@@ -77,7 +77,7 @@
             </ul>
 
         </div>
-        <!-- End Sidebar -->
+
 
         <div class="clearfix"></div>
 

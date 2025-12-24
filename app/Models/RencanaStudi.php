@@ -11,9 +11,7 @@ class RencanaStudi extends Model
 
     protected $table = 'rencana_studi';
 
-    /**
-     * The primary key associated with the table.
-     */
+
     protected $primaryKey = 'id_rencana_studi';
 
     protected $fillable = [
@@ -23,24 +21,18 @@ class RencanaStudi extends Model
         'catatan',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
+
     protected $casts = [
         'id_mata_kuliah' => 'array',
     ];
 
-    /**
-     * Get the user that owns the rencana studi.
-     */
+
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
-    /**
-     * Get mata kuliah collection from JSON IDs
-     */
+
     public function getMataKuliahAttribute()
     {
         if (empty($this->id_mata_kuliah)) {

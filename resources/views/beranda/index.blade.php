@@ -6,7 +6,7 @@
         <div class="col-12 mt-3">
             <div class="card card-body shadow-sm">
                 <h3 class="mb-4 fw-bold">Beranda</h3>
-                {{-- Pesan Sukses --}}
+
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <!-- contoh varian gradasi kebalikan -->
+
                         <div class="card text-center stat-card alt mb-3">
                             <div class="card-body">
                                 <h6 class="mb-1">Jumlah SKS sudah ditempuh</h6>

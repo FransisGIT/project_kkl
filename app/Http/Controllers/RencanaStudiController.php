@@ -9,20 +9,18 @@ use App\Models\RencanaStudi;
 
 class RencanaStudiController extends Controller
 {
-    /**
-     * Tampilkan halaman KRS (Rencana Studi)
-     */
+
     public function index(Request $request)
     {
         $user = Auth::user();
         $roles = \App\Models\Role::all();
 
-        // Pastikan hanya mahasiswa yang bisa akses
+
         if ($user->id_role !== 3) {
             abort(403, 'Hanya mahasiswa yang dapat mengakses halaman ini.');
         }
 
-        // Filter/sort opsi
+
         $semester = $request->get('semester');
         $search = $request->get('search');
 
@@ -31,7 +29,7 @@ class RencanaStudiController extends Controller
         if ($search) $query->where('nama_matakuliah', 'like', "%$search%");
         $mataKuliah = $query->get();
 
-        // Ambil id MK dari rencana studi aktif
+
         $rencanaAktif = $user->rencanaStudiAktif;
         $mkDiambil = $rencanaAktif && $rencanaAktif->id_mata_kuliah ? $rencanaAktif->id_mata_kuliah : [];
 
@@ -49,35 +47,33 @@ class RencanaStudiController extends Controller
         ]);
     }
 
-    /**
-     * Simpan pengajuan KRS
-     */
+
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        // Hanya mahasiswa yang bisa mengajukan KRS
+
         if ($user->id_role !== 3) {
             abort(403, 'Hanya mahasiswa yang dapat mengajukan KRS.');
         }
 
-        $mkDipilih = $request->input('matakuliah', []); // array of id_matakuliah
+        $mkDipilih = $request->input('matakuliah', []);
 
-        // Validasi: minimal pilih 1 mata kuliah
+
         if (empty($mkDipilih)) {
             return redirect()->back()->with('error', 'Pilih minimal 1 mata kuliah!');
         }
 
-        // Ambil data mata kuliah yang dipilih
+
         $mataKuliahDipilih = MataKuliah::whereIn('id_matakuliah', $mkDipilih)->get();
 
-        // Validasi maksimal 24 SKS
+
         $totalSks = $mataKuliahDipilih->sum('sks');
         if ($totalSks > 24) {
             return redirect()->back()->with('error', "Total SKS yang Anda pilih ($totalSks SKS) melebihi batas maksimal 24 SKS");
         }
 
-        // Validasi prasyarat - ambil mata kuliah yang sudah lulus
+
         $nilaiMahasiswa = \App\Models\NilaiMahasiswa::where('id_user', $user->id_user)
             ->where('status', 'lulus')
             ->pluck('id_matakuliah')
@@ -95,10 +91,10 @@ class RencanaStudiController extends Controller
             }
         }
 
-        // Cek tunggakan mahasiswa
+
         $tunggakan = intval($user->tunggakan ?? 0);
         if ($tunggakan > 0) {
-            // Jika tunggakan lebih dari 5 juta, simpan pengajuan dan arahkan ke proses persetujuan Warek2
+
             if ($tunggakan > 5000000) {
                 RencanaStudi::create([
                     'id_user' => $user->id_user,
@@ -106,20 +102,20 @@ class RencanaStudiController extends Controller
                     'status' => 'menunggu_warek',
                 ]);
 
-                return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan tetapi menunggu persetujuan Warek2 karena tunggakan Anda sebesar Rp " . number_format($tunggakan,0,',','.'));
+                return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan tetapi menunggu persetujuan Warek2 karena tunggakan Anda sebesar Rp " . number_format($tunggakan, 0, ',', '.'));
             }
 
-            // Jika ada tunggakan (<= 5 juta), simpan pengajuan sebagai menunggu persetujuan Keuangan
+
             RencanaStudi::create([
                 'id_user' => $user->id_user,
                 'id_mata_kuliah' => $mkDipilih,
                 'status' => 'menunggu_keuangan',
             ]);
 
-            return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan dan menunggu persetujuan Keuangan karena tunggakan Anda sebesar Rp " . number_format($tunggakan,0,',','.'));
+            return redirect()->route('krs.index')->with('warning', "Pengajuan KRS disimpan dan menunggu persetujuan Keuangan karena tunggakan Anda sebesar Rp " . number_format($tunggakan, 0, ',', '.'));
         }
 
-        // Simpan sebagai JSON dengan status menunggu persetujuan
+
         RencanaStudi::create([
             'id_user' => $user->id_user,
             'id_mata_kuliah' => $mkDipilih,

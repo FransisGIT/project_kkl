@@ -11,19 +11,13 @@ class MataKuliah extends Model
 
     protected $table = 'mata_kuliah';
 
-    /**
-     * The primary key associated with the table.
-     */
+
     protected $primaryKey = 'id_matakuliah';
 
-    /**
-     * The data type of the primary key.
-     */
+
     protected $keyType = 'string';
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     */
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -39,33 +33,25 @@ class MataKuliah extends Model
         'prasyarat_ids',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
+
     protected $casts = [
         'prasyarat_ids' => 'array',
     ];
 
-    /**
-     * Get users for the mata kuliah (many-to-many through rencana_studi).
-     */
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'rencana_studi', 'id_matakuliah', 'id_user')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
-    /**
-     * Get rencana studi for the mata kuliah.
-     */
+
     public function rencanaStudi()
     {
         return $this->hasMany(RencanaStudi::class, 'id_matakuliah', 'id_matakuliah');
     }
 
-    /**
-     * Get mata kuliah prasyarat
-     */
+
     public function prasyarat()
     {
         if (empty($this->prasyarat_ids)) {
@@ -74,9 +60,7 @@ class MataKuliah extends Model
         return MataKuliah::whereIn('id_matakuliah', $this->prasyarat_ids)->get();
     }
 
-    /**
-     * Get nilai mahasiswa for this mata kuliah
-     */
+
     public function nilaiMahasiswa()
     {
         return $this->hasMany(\App\Models\NilaiMahasiswa::class, 'id_matakuliah', 'id_matakuliah');

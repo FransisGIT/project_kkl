@@ -85,7 +85,6 @@
                                     @php
                                         $isAmbil = in_array($mk->id_matakuliah, $mkDiambil);
 
-                                        // Cek prasyarat
                                         $prasyaratTerpenuhi = true;
                                         $prasyaratInfo = '';
                                         $nilaiLulus = \App\Models\NilaiMahasiswa::where('id_user', Auth::id())
@@ -94,7 +93,10 @@
                                             ->toArray();
 
                                         if (!empty($mk->prasyarat_ids)) {
-                                            $prasyaratMk = \App\Models\MataKuliah::whereIn('id_matakuliah', $mk->prasyarat_ids)->get();
+                                            $prasyaratMk = \App\Models\MataKuliah::whereIn(
+                                                'id_matakuliah',
+                                                $mk->prasyarat_ids,
+                                            )->get();
                                             $prasyaratNama = [];
 
                                             foreach ($prasyaratMk as $pra) {
@@ -111,7 +113,11 @@
                                             $prasyaratInfo = '-';
                                         }
 
-                                        $bgClass = $isAmbil ? 'bg-success-subtle' : ($prasyaratTerpenuhi ? 'bg-info-subtle' : 'bg-danger-subtle');
+                                        $bgClass = $isAmbil
+                                            ? 'bg-success-subtle'
+                                            : ($prasyaratTerpenuhi
+                                                ? 'bg-info-subtle'
+                                                : 'bg-danger-subtle');
                                     @endphp
                                     <tr class="{{ $bgClass }}">
                                         <td>{{ $mk->kode_matakuliah }}</td>
@@ -128,8 +134,7 @@
                                         <td>{{ $mk->peserta }}</td>
                                         <td>
                                             <input type="checkbox" name="matakuliah[]" value="{{ $mk->id_matakuliah }}"
-                                                class="krs-checkbox"
-                                                {{ $isAmbil ? 'checked' : '' }}
+                                                class="krs-checkbox" {{ $isAmbil ? 'checked' : '' }}
                                                 {{ !$prasyaratTerpenuhi ? 'disabled title="Prasyarat belum terpenuhi"' : '' }}>
                                         </td>
                                     </tr>
@@ -172,7 +177,6 @@
     <script src="{{ asset('assets/js/pages/admin/categories/page.js') }}"></script>
 
     <script>
-        // Hitung total SKS saat halaman dimuat
         function hitungTotalSKS() {
             let totalSKS = 0;
             $('.krs-checkbox:checked:not(:disabled)').each(function() {
@@ -183,7 +187,7 @@
 
             $('#total-sks').text(totalSKS);
 
-            // Beri warning jika lebih dari 24
+
             if (totalSKS > 24) {
                 $('#total-sks').parent().removeClass('bg-primary').addClass('bg-danger');
             } else {
@@ -193,7 +197,7 @@
             return totalSKS;
         }
 
-        // Update saat checkbox berubah
+
         $(document).ready(function() {
             hitungTotalSKS();
 
@@ -201,7 +205,7 @@
                 hitungTotalSKS();
             });
 
-            // Validasi sebelum submit
+
             $('form').submit(function(e) {
                 let totalSKS = hitungTotalSKS();
                 if (totalSKS > 24) {
