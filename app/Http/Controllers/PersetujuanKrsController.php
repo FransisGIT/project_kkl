@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class PersetujuanKrsController extends Controller
 {
-    /**
-     * Tampilkan daftar KRS yang perlu disetujui (untuk admin/dosen)
-     */
+
     public function index()
     {
         $user = Auth::user();
         $roles = Role::all();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0e6d57153d425d6ec75995eb081427367a0b9919
         if (in_array($user->id_role, [1, 2])) {
             $rencanaStudi = RencanaStudi::with('user')
                 ->orderBy('created_at', 'desc')
@@ -28,7 +30,7 @@ class PersetujuanKrsController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(20);
         } elseif ($user->id_role == 4) {
-            // Keuangan sees requests waiting for financial approval
+
             $rencanaStudi = RencanaStudi::with('user')
                 ->where('status', 'menunggu_keuangan')
                 ->orderBy('created_at', 'desc')
@@ -37,7 +39,7 @@ class PersetujuanKrsController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        // Process data untuk setiap rencana studi
+
         $rencanaStudi->getCollection()->transform(function ($rs) {
             $mataKuliah = \App\Models\MataKuliah::whereIn('id_matakuliah', $rs->id_mata_kuliah ?? [])->get();
             $rs->mataKuliahList = $mataKuliah;
@@ -49,15 +51,12 @@ class PersetujuanKrsController extends Controller
         return view('persetujuan-krs.index', compact('rencanaStudi', 'roles'));
     }
 
-    /**
-     * Setujui KRS
-     */
+
     public function approve($id)
     {
         $user = Auth::user();
 
-        // Admin/Dosen dapat langsung menyetujui (set status disetujui)
-        // Warek2 menyetujui tahap warek (mengubah status dari menunggu_warek -> menunggu)
+
         $rencana = RencanaStudi::findOrFail($id);
 
         if (in_array($user->id_role, [1, 2])) {
@@ -69,7 +68,7 @@ class PersetujuanKrsController extends Controller
         }
 
         if ($user->id_role == 5) {
-            // pastikan status saat ini menunggu_warek
+
             if ($rencana->status !== 'menunggu_warek') {
                 return redirect()->back()->with('error', 'Pengajuan tidak memerlukan persetujuan Warek2.');
             }
@@ -83,7 +82,7 @@ class PersetujuanKrsController extends Controller
         }
 
         if ($user->id_role == 4) {
-            // Keuangan approves financial hold -> status becomes 'menunggu'
+
             if ($rencana->status !== 'menunggu_keuangan') {
                 return redirect()->back()->with('error', 'Pengajuan tidak memerlukan persetujuan Keuangan.');
             }
@@ -99,9 +98,7 @@ class PersetujuanKrsController extends Controller
         abort(403);
     }
 
-    /**
-     * Tolak KRS
-     */
+
     public function reject(Request $request, $id)
     {
         $user = Auth::user();

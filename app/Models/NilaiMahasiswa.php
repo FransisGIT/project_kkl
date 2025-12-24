@@ -21,17 +21,13 @@ class NilaiMahasiswa extends Model
         'semester_ambil',
     ];
 
-    /**
-     * Get the user (mahasiswa)
-     */
+
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
-    /**
-     * Get the mata kuliah
-     */
+
     public function mataKuliah()
     {
         return $this->belongsTo(MataKuliah::class, 'id_matakuliah', 'id_matakuliah');

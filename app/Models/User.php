@@ -11,19 +11,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The primary key associated with the table.
-     */
+
     protected $primaryKey = 'id_user';
 
-    /**
-     * The data type of the primary key.
-     */
+
     protected $keyType = 'string';
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     */
+
     public $incrementing = false;
 
     /**
@@ -58,9 +52,7 @@ class User extends Authenticatable
         // 'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Get the role that owns the user.
-     */
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
@@ -74,18 +66,14 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\RencanaStudi::class, 'id_user', 'id_user');
     }
 
-    /**
-     * Get latest rencana studi
-     */
+
     public function rencanaStudiAktif()
     {
         return $this->hasOne(\App\Models\RencanaStudi::class, 'id_user', 'id_user')
             ->latest();
     }
 
-    /**
-     * Get mata kuliah dari rencana studi aktif
-     */
+
     public function getMataKuliahDiambilAttribute()
     {
         $rencanaAktif = $this->rencanaStudiAktif;
@@ -95,9 +83,7 @@ class User extends Authenticatable
         return $rencanaAktif->id_mata_kuliah;
     }
 
-    /**
-     * Get nilai mahasiswa
-     */
+
     public function nilaiMahasiswa()
     {
         return $this->hasMany(\App\Models\NilaiMahasiswa::class, 'id_user', 'id_user');

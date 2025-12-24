@@ -19,32 +19,32 @@ class DispensasiController extends Controller
 
         $user = auth()->user();
 
-        // Dosen tidak melihat/terlibat dalam alur dispensasi
+
         if ($user->id_role == 2) {
-            $data = collect([]); // kosong
+            $data = collect([]);
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
 
-        // Mahasiswa lihat miliknya
+
         if ($user->id_role == 3) {
             $data = Dispensasi::where('id_user', $user->id_user)->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
-        // Keuangan (4) validates pending submissions
+
         if ($user->id_role == 4) {
             $data = Dispensasi::where('status', 'menunggu')->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
-        // Wakil Rektor 2 (5) sees submissions that require warek approval
+
         if ($user->id_role == 5) {
             $data = Dispensasi::where('status', 'menunggu_warek')->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
-        // Default (admin/others): show all
+
         $data = Dispensasi::orderBy('created_at', 'desc')->get();
         return view('dispensasi.index', compact('data', 'roles'));
     }
@@ -98,7 +98,7 @@ class DispensasiController extends Controller
         ]);
 
         $note = $request->input('note');
-        // handle payment proof upload (keuangan)
+
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('bukti_pembayaran', 'public');
             $disp->payment_proof = $path;
@@ -112,10 +112,10 @@ class DispensasiController extends Controller
             'at' => now()->toDateTimeString(),
         ];
 
-        // Keuangan (role 4) approves initial request
+
         if ($user->id_role == 4 && $disp->status == 'menunggu') {
             $amount = intval($disp->jumlah_pengajuan ?? 0);
-            // if amount >= 5,000,000 -> escalate to Wakil Rektor 2
+
             if ($amount >= 5000000) {
                 $disp->status = 'menunggu_warek';
             } else {
@@ -123,7 +123,7 @@ class DispensasiController extends Controller
             }
         }
 
-        // Wakil Rektor 2 (role 5) final approval for escalated requests
+
         if ($user->id_role == 5 && $disp->status == 'menunggu_warek') {
             $disp->status = 'diterima_warek';
         }
@@ -156,15 +156,13 @@ class DispensasiController extends Controller
         return redirect()->back()->with('success_message', 'Pengajuan telah ditolak.');
     }
 
-    /**
-     * Return the PDF file inline for preview.
-     */
+
     public function preview($id)
     {
         $user = Auth::user();
         $disp = Dispensasi::findOrFail($id);
 
-        // authorization: students can only preview their own file; approvers/admin can preview all
+
         if ($user->id_role == 3 && $disp->id_user != $user->id_user) {
             abort(403);
         }
@@ -189,15 +187,13 @@ class DispensasiController extends Controller
         abort(404);
     }
 
-    /**
-     * Full-page viewer that embeds the preview route.
-     */
+
     public function view($id)
     {
         $user = Auth::user();
         $disp = Dispensasi::findOrFail($id);
 
-        // students only view their own
+
         if ($user->id_role == 3 && $disp->id_user != $user->id_user) {
             abort(403);
         }
@@ -206,23 +202,19 @@ class DispensasiController extends Controller
         return view('dispensasi.view', compact('disp', 'src'));
     }
 
-    /**
-     * Show the sample dispensasi template with empty name/NIM/Prodi.
-     */
+
     public function sample()
     {
         return view('dispensasi.sample');
     }
 
-    /**
-     * Serve payment proof image inline from storage without requiring storage:link.
-     */
+
     public function paymentProof($id)
     {
         $user = Auth::user();
         $disp = Dispensasi::findOrFail($id);
 
-        // students only view their own
+
         if ($user->id_role == 3 && $disp->id_user != $user->id_user) {
             abort(403);
         }

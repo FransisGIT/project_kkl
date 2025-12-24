@@ -10,20 +10,18 @@ use App\Models\Role;
 
 class JadwalKuliahController extends Controller
 {
-    /**
-     * Tampilkan jadwal kuliah mahasiswa yang sudah disetujui
-     */
+
     public function index()
     {
         $user = Auth::user();
         $roles = Role::all();
 
-        // Pastikan hanya mahasiswa yang bisa akses
+
         if ($user->id_role !== 3) {
             abort(403, 'Hanya mahasiswa yang dapat mengakses halaman ini.');
         }
 
-        // Ambil rencana studi yang disetujui
+
         $rencanaAktif = RencanaStudi::where('id_user', $user->id_user)
             ->where('status', 'disetujui')
             ->latest()
@@ -43,7 +41,7 @@ class JadwalKuliahController extends Controller
                     ->get();
             }
         } else {
-            // Cek apakah ada pengajuan yang masih menunggu atau ditolak
+
             $rencanaLain = RencanaStudi::where('id_user', $user->id_user)
                 ->latest()
                 ->first();

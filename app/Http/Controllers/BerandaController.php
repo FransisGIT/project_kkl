@@ -17,7 +17,7 @@ class BerandaController extends Controller
 
         $mataKuliah = MataKuliah::all();
 
-        // Ambil mata kuliah dari rencana studi yang disetujui
+
         $rencanaAktif = $user->rencanaStudiAktif;
         $mkDiambil = [];
 
