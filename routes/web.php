@@ -46,9 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'index'])
         ->name('dispensasi.index');
 
-    Route::get('/dispensasi/create', [\App\Http\Controllers\DispensasiController::class, 'create'])
-        ->name('dispensasi.create');
-
     Route::post('/dispensasi', [\App\Http\Controllers\DispensasiController::class, 'store'])
         ->name('dispensasi.store');
 
@@ -57,4 +54,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/dispensasi/{id}/reject', [\App\Http\Controllers\DispensasiController::class, 'reject'])
         ->name('dispensasi.reject');
+
+    // Preview and full-page view for dispensasi PDFs
+    Route::get('/dispensasi/{id}/preview', [\App\Http\Controllers\DispensasiController::class, 'preview'])
+        ->name('dispensasi.preview');
+
+    Route::get('/dispensasi/{id}/view', [\App\Http\Controllers\DispensasiController::class, 'view'])
+        ->name('dispensasi.view');
+
+    Route::get('/dispensasi/{id}/payment-proof', [\App\Http\Controllers\DispensasiController::class, 'paymentProof'])
+        ->name('dispensasi.payment_proof');
 });
