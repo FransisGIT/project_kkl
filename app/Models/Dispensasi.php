@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Dispensasi extends Model
 {
@@ -26,4 +27,9 @@ class Dispensasi extends Model
     protected $casts = [
         'approver_notes' => 'array',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

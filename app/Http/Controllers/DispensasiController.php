@@ -20,23 +20,23 @@ class DispensasiController extends Controller
         $user = auth()->user();
 
         if ($user->id_role == 3) {
-            $data = Dispensasi::where('id_user', $user->id_user)->orderBy('created_at', 'desc')->get();
+            $data = Dispensasi::with('user')->where('id_user', $user->id_user)->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
         if ($user->id_role == 4) {
-            $data = Dispensasi::where('status', 'menunggu')->orderBy('created_at', 'desc')->get();
+            $data = Dispensasi::with('user')->where('status', 'menunggu')->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
 
         if ($user->id_role == 5) {
-            $data = Dispensasi::where('status', 'menunggu_warek')->orderBy('created_at', 'desc')->get();
+            $data = Dispensasi::with('user')->where('status', 'menunggu_warek')->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
 
 
-        $data = Dispensasi::orderBy('created_at', 'desc')->get();
+        $data = Dispensasi::with('user')->orderBy('created_at', 'desc')->get();
         return view('dispensasi.index', compact('data', 'roles'));
     }
 
@@ -148,27 +148,30 @@ class DispensasiController extends Controller
         $user = Auth::user();
         $disp = Dispensasi::findOrFail($id);
 
-
-        if ($user->id_role == 3 && $disp->id_user != $user->id_user) {
-            abort(403);
-        }
-
-        $file = $disp->surat_dispensasi ?? $disp->file_surat ?? null;
-        if (!$file) {
-            Log::error('File not found for preview', ['id' => $id]);
-            abort(404);
-        }
-
-        $storagePath = storage_path('app/public/' . $file);
+        $search = request()->get('search');
         Log::info('Serving file for preview', ['file' => $storagePath]);
+        // start base query
+        $query = Dispensasi::with('user')->orderBy('created_at', 'desc');
 
-        if (file_exists($storagePath)) {
-            return response()->make(file_get_contents($storagePath), 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . basename($file) . '"'
-            ]);
+        // role-based restrictions
+        if ($user->id_role == 3) {
+            $query->where('id_user', $user->id_user);
+        } elseif ($user->id_role == 4) {
+            $query->where('status', 'menunggu');
+        } elseif ($user->id_role == 5) {
+            $query->where('status', 'menunggu_warek');
         }
 
+        // optional search by mahasiswa name
+        if (!empty($search)) {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        $data = $query->get();
+
+        return view('dispensasi.index', compact('data', 'roles', 'search'));
         Log::error('File does not exist on disk', ['file' => $storagePath]);
         abort(404);
     }

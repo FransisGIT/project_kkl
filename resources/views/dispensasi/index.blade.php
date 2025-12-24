@@ -4,11 +4,16 @@
     <div class="card p-4 mt-3 shadow-sm">
         <h4>Riwayat Pengajuan Dispensasi</h4>
         <hr>
-        <div class="mb-3 d-flex gap-2">
+        <div class="mb-3 d-flex gap-2 align-items-center">
             <a href="{{ asset('assets/media/sample-dispensasi.docx') }}" target="_blank" rel="noopener"
                 class="btn btn-primary btn-sm">
                 Surat Dispensasi
             </a>
+            <form method="GET" class="ms-auto d-flex align-items-center" style="max-width:360px;">
+                <input type="text" name="search" value="{{ $search ?? request('search') }}" class="form-control form-control-sm"
+                    placeholder="Cari nama mahasiswa...">
+                <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">Cari</button>
+            </form>
             @php $me = auth()->user(); @endphp
             @if ($me->id_role == 3)
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalAjukan">Ajukan
@@ -23,6 +28,7 @@
             <thead>
                 <tr>
                     <th>Tahun Akademik</th>
+                            <th>Mahasiswa</th>
                     <th>Jumlah</th>
                     <th>No HP</th>
                     <th>Deadline</th>
@@ -34,7 +40,7 @@
                 @if (!empty($d->approver_notes) && count($d->approver_notes) > 0)
                     @php $notes = $d->approver_notes; @endphp
                     <tr class="table-active">
-                        <td colspan="8">
+                        <td colspan="9">
                             <strong>Riwayat Persetujuan:</strong>
                             <ul class="mb-0">
                                 @foreach ($notes as $n)
@@ -61,9 +67,10 @@
 
             <tbody>
                 @forelse ($data as $d)
-                    <tr>
-                        <td>{{ $d->tahun_akademik ?? '-' }}</td>
-                        <td>{{ $d->jumlah_pengajuan ?? ($d->jumlah ?? '-') }}</td>
+                <tr>
+                <td>{{ $d->tahun_akademik ?? '-' }}</td>
+                <td>{{ $d->user->name ?? '-' }}</td>
+                <td>{{ $d->jumlah_pengajuan ?? ($d->jumlah ?? '-') }}</td>
                         <td>{{ $d->no_hp ?? '-' }}</td>
                         <td>{{ $d->tanggal_deadline ?? '-' }}</td>
                         <td>
@@ -108,18 +115,18 @@
                             @php $me = auth()->user(); @endphp
                             @if ($me->id_role == 4 || $me->id_role == 5)
                                 @if ($d->status == 'menunggu' || $d->status == 'menunggu_warek')
-                                    <form action="{{ route('dispensasi.approve', $d->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        <input type="hidden" name="note" value="Disetujui oleh {{ $me->name }}">
-                                        <button class="btn btn-sm btn-success">Approve</button>
-                                    </form>
-                                    <form action="{{ route('dispensasi.reject', $d->id) }}" method="POST"
-                                        class="d-inline ms-1">
-                                        @csrf
-                                        <input type="hidden" name="note" value="Ditolak oleh {{ $me->name }}">
-                                        <button class="btn btn-sm btn-danger">Reject</button>
-                                    </form>
+                                    <div class="d-flex gap-2 justify-content-center align-items-center">
+                                        <form action="{{ route('dispensasi.approve', $d->id) }}" method="POST" class="m-0">
+                                            @csrf
+                                            <input type="hidden" name="note" value="Disetujui oleh {{ $me->name }}">
+                                            <button class="btn btn-success btn-sm px-3">Approve</button>
+                                        </form>
+                                        <form action="{{ route('dispensasi.reject', $d->id) }}" method="POST" class="m-0">
+                                            @csrf
+                                            <input type="hidden" name="note" value="Ditolak oleh {{ $me->name }}">
+                                            <button class="btn btn-danger btn-sm px-3">Reject</button>
+                                        </form>
+                                    </div>
                                 @else
                                     -
                                 @endif
@@ -130,7 +137,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">Belum ada pengajuan dispensasi</td>
+                        <td colspan="9" class="text-center">Belum ada pengajuan dispensasi</td>
                     </tr>
                 @endforelse
             </tbody>

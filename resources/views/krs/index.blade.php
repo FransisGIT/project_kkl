@@ -120,7 +120,6 @@
                                             $prasyaratInfo = '-';
                                         }
 
-                                        // Background class: taken/passed > pending > available/blocked
                                         if ($isAmbil || $sudahDitempuh) {
                                             $bgClass = 'bg-success-subtle';
                                         } elseif ($sudahDiajukan) {
