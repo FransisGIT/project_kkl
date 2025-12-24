@@ -92,11 +92,18 @@
                                             ->pluck('id_matakuliah')
                                             ->toArray();
 
+                                        // sudah ditempuh
+                                        $sudahDitempuh = in_array($mk->id_matakuliah, $nilaiLulus);
+
+                                        // cek sudah diajukan di rencana yang pending
+                                        $pendingStatuses = ['menunggu', 'menunggu_keuangan', 'menunggu_warek'];
+                                        $sudahDiajukan = \App\Models\RencanaStudi::where('id_user', auth()->user()->id_user)
+                                            ->whereIn('status', $pendingStatuses)
+                                            ->whereJsonContains('id_mata_kuliah', $mk->id_matakuliah)
+                                            ->exists();
+
                                         if (!empty($mk->prasyarat_ids)) {
-                                            $prasyaratMk = \App\Models\MataKuliah::whereIn(
-                                                'id_matakuliah',
-                                                $mk->prasyarat_ids,
-                                            )->get();
+                                            $prasyaratMk = \App\Models\MataKuliah::whereIn('id_matakuliah', $mk->prasyarat_ids)->get();
                                             $prasyaratNama = [];
 
                                             foreach ($prasyaratMk as $pra) {
@@ -104,8 +111,8 @@
                                                 if (!$terpenuhi) {
                                                     $prasyaratTerpenuhi = false;
                                                 }
-                                                $icon = $terpenuhi ? '✓' : '✗';
-                                                $prasyaratNama[] = $icon . ' ' . $pra->kode_matakuliah;
+                                                $icon = $terpenuhi ? '✓ ' : '';
+                                                $prasyaratNama[] = $icon . $pra->nama_matakuliah;
                                             }
 
                                             $prasyaratInfo = implode(', ', $prasyaratNama);
@@ -113,11 +120,16 @@
                                             $prasyaratInfo = '-';
                                         }
 
-                                        $bgClass = $isAmbil
-                                            ? 'bg-success-subtle'
-                                            : ($prasyaratTerpenuhi
-                                                ? 'bg-info-subtle'
-                                                : 'bg-danger-subtle');
+                                        // Background class: taken/passed > pending > available/blocked
+                                        if ($isAmbil || $sudahDitempuh) {
+                                            $bgClass = 'bg-success-subtle';
+                                        } elseif ($sudahDiajukan) {
+                                            $bgClass = 'bg-warning-subtle';
+                                        } elseif ($prasyaratTerpenuhi) {
+                                            $bgClass = 'bg-info-subtle';
+                                        } else {
+                                            $bgClass = 'bg-danger-subtle';
+                                        }
                                     @endphp
                                     <tr class="{{ $bgClass }}">
                                         <td>{{ $mk->kode_matakuliah }}</td>
@@ -133,9 +145,24 @@
                                         <td>{{ $mk->kapasitas }}</td>
                                         <td>{{ $mk->peserta }}</td>
                                         <td>
+                                            @php
+                                                $disabled = '';
+                                                $title = '';
+                                                if ($sudahDitempuh) {
+                                                    $disabled = 'disabled';
+                                                    $title = 'Sudah ditempuh';
+                                                } elseif ($sudahDiajukan) {
+                                                    $disabled = 'disabled';
+                                                    $title = 'Sudah diajukan (menunggu)';
+                                                } elseif (!$prasyaratTerpenuhi) {
+                                                    $disabled = 'disabled';
+                                                    $title = 'Prasyarat belum terpenuhi';
+                                                }
+                                            @endphp
+
                                             <input type="checkbox" name="matakuliah[]" value="{{ $mk->id_matakuliah }}"
                                                 class="krs-checkbox" {{ $isAmbil ? 'checked' : '' }}
-                                                {{ !$prasyaratTerpenuhi ? 'disabled title="Prasyarat belum terpenuhi"' : '' }}>
+                                                {!! $disabled ? 'disabled title="' . e($title) . '"' : '' !!}>
                                         </td>
                                     </tr>
                                 @empty

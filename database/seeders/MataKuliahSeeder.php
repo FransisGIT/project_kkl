@@ -13,6 +13,11 @@ class MataKuliahSeeder extends Seeder
      */
     public function run(): void
     {
+        // Assign fixed UUIDs for the web course chain so prasyarat_ids can reference them
+        $webDasarId = (string) Str::uuid();
+        $webProgId = (string) Str::uuid();
+        $webFwId = (string) Str::uuid();
+
         $data = [
             [
                 'id_matakuliah' => (string) Str::uuid(),
@@ -51,7 +56,7 @@ class MataKuliahSeeder extends Seeder
                 'peserta' => 20,
             ],
             [
-                'id_matakuliah' => (string) Str::uuid(),
+                'id_matakuliah' => $webProgId,
                 'kode_matakuliah' => '23STNKN1126',
                 'nama_matakuliah' => 'Web Programming',
                 'sks' => 3,
@@ -61,6 +66,7 @@ class MataKuliahSeeder extends Seeder
                 'jam' => '09:30-12:00',
                 'kapasitas' => 40,
                 'peserta' => 38,
+                'prasyarat_ids' => json_encode([$webDasarId]),
             ],
             [
                 'id_matakuliah' => (string) Str::uuid(),
@@ -149,7 +155,7 @@ class MataKuliahSeeder extends Seeder
                 'peserta' => 38,
             ],
             [
-                'id_matakuliah' => (string) Str::uuid(),
+                'id_matakuliah' => $webDasarId,
                 'kode_matakuliah' => '23STNKN1203',
                 'nama_matakuliah' => 'Pemrograman Web Dasar',
                 'sks' => 3,
@@ -223,7 +229,7 @@ class MataKuliahSeeder extends Seeder
             ],
             // Semester 4
             [
-                'id_matakuliah' => (string) Str::uuid(),
+                'id_matakuliah' => $webFwId,
                 'kode_matakuliah' => '23STNKN1401',
                 'nama_matakuliah' => 'Web Framework',
                 'sks' => 3,
@@ -233,6 +239,7 @@ class MataKuliahSeeder extends Seeder
                 'jam' => '07:00-09:30',
                 'kapasitas' => 40,
                 'peserta' => 25,
+                'prasyarat_ids' => json_encode([$webProgId]),
             ],
             [
                 'id_matakuliah' => (string) Str::uuid(),

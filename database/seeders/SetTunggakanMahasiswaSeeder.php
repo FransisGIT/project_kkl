@@ -9,7 +9,6 @@ class SetTunggakanMahasiswaSeeder extends Seeder
 {
     public function run()
     {
-        // Ambil 3 mahasiswa pertama berdasarkan created_at
         $mahasiswas = User::where('id_role', 3)->orderBy('created_at')->take(3)->get();
 
         $amounts = [2500000, 1000000, 6000000];

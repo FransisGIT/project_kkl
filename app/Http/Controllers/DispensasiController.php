@@ -19,19 +19,10 @@ class DispensasiController extends Controller
 
         $user = auth()->user();
 
-
-        if ($user->id_role == 2) {
-            $data = collect([]);
-            return view('dispensasi.index', compact('data', 'roles'));
-        }
-
-
-
         if ($user->id_role == 3) {
             $data = Dispensasi::where('id_user', $user->id_user)->orderBy('created_at', 'desc')->get();
             return view('dispensasi.index', compact('data', 'roles'));
         }
-
 
         if ($user->id_role == 4) {
             $data = Dispensasi::where('status', 'menunggu')->orderBy('created_at', 'desc')->get();
@@ -47,11 +38,6 @@ class DispensasiController extends Controller
 
         $data = Dispensasi::orderBy('created_at', 'desc')->get();
         return view('dispensasi.index', compact('data', 'roles'));
-    }
-
-    public function create()
-    {
-        return view('dispensasi.create');
     }
 
     public function store(Request $request)
@@ -214,14 +200,13 @@ class DispensasiController extends Controller
         $user = Auth::user();
         $disp = Dispensasi::findOrFail($id);
 
-
         if ($user->id_role == 3 && $disp->id_user != $user->id_user) {
             abort(403);
         }
 
         $file = $disp->payment_proof ?? null;
         if (!$file) {
-            Log::error('Payment proof not found', ['id' => $id]);
+            Log::error('Payment proof file not found', ['id' => $id]);
             abort(404);
         }
 
