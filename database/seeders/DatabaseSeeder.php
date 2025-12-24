@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             NilaiMahasiswaSeeder::class,
             DispensasiSeeder::class,
             SetTunggakanMahasiswaSeeder::class,
+            DemoKrsSeeder::class,
         ]);
     }
 }
