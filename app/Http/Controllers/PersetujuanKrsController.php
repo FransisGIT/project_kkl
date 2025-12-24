@@ -18,9 +18,6 @@ class PersetujuanKrsController extends Controller
         $user = Auth::user();
         $roles = Role::all();
 
-        // Akses tergantung role:
-        // - Admin/Dosen (1,2): lihat semua pengajuan
-        // - Warek2 (5): lihat pengajuan yang menunggu persetujuan Warek2
         if (in_array($user->id_role, [1, 2])) {
             $rencanaStudi = RencanaStudi::with('user')
                 ->orderBy('created_at', 'desc')

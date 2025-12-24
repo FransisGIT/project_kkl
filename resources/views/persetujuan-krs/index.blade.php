@@ -102,7 +102,7 @@
                                                             <tbody>
                                                                 @forelse($rs->mataKuliahList as $mk)
                                                                     <tr>
-                                                                        <td>{{ $mk->kode ?? '-' }}</td>
+                                                                        <td>{{ $mk->kode_matakuliah ?? '-' }}</td>
                                                                         <td>{{ $mk->nama ?? $mk->nama_matakuliah ?? '-' }}</td>
                                                                         <td>{{ $mk->sks ?? '-' }}</td>
                                                                     </tr>
